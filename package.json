@@ -4,7 +4,8 @@
   "description": "Adsi sistema de compraventa 2021",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app",
+    "dev" : "nodemon app"
   },
   "type": "module",
   "author": "FRANCISCO JAVIER FRANCO SOLANO",
