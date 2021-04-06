@@ -1,5 +1,8 @@
 import Usuario from '../models/usuario.js';
 import bcryptjs from 'bcryptjs';
+import { generarJWT } from '../middlewares/validarJwt.js';
+
+
 const usuarioController={
     //objeto para enviar todos los usuarios
     usuarioGet: async(req,res)=>{
@@ -31,6 +34,29 @@ const usuarioController={
         // guardar o enviar a la base de datos
         await usuario.save();
         res.json({usuario})
+    },
+    login:async(req,res)=>{
+        const {email,password}=req.body;
+        const usuario = await Usuario.findOne({email:email});
+        // verificar que exista el correo
+        if (!usuario) {
+            return res.json({msg:'usuario/password no validos email'})
+        }
+        // verificar que este activo el usuario
+        if (usuario.estado === 0) {
+            return res.json({msg:'usuario/password no validos estado'})
+        }
+        //verificar que la contraseña sea valida
+        const validarPassword=bcryptjs.compareSync(password,usuario.password);
+        if (!validarPassword) {
+            return res.json({msg:'usuario/password no validos estado pass'})
+        }
+        //crear token encriptado del id de usuario
+        const token = await generarJWT(usuario.id);
+        res.json({
+            usuario,
+            token
+        })
     },
     usuarioPut:async(req,res)=>{
         const {id} = req.params;
