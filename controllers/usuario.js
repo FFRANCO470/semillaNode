@@ -39,32 +39,29 @@ const usuarioController={
         const {email,password}=req.body;
         const usuario = await Usuario.findOne({email:email});
         // verificar que exista el correo
-        if (!usuario) {
-            return res.json({msg:'usuario/password no validos email'})
-        }
+        if (!usuario) {return res.json({msg:'usuario/password no validos email'})}
         // verificar que este activo el usuario
-        if (usuario.estado === 0) {
-            return res.json({msg:'usuario/password no validos estado'})
-        }
+        if (usuario.estado === 0) {return res.json({msg:'usuario/password no validos estado'})}
         //verificar que la contraseña sea valida
         const validarPassword=bcryptjs.compareSync(password,usuario.password);
-        if (!validarPassword) {
-            return res.json({msg:'usuario/password no validos estado pass'})
-        }
+        if (!validarPassword) {return res.json({msg:'usuario/password no validos estado pass'})}
         //crear token encriptado del id de usuario
         const token = await generarJWT(usuario.id);
-        res.json({
-            usuario,
-            token
-        })
+        res.json({usuario,token})
     },
     usuarioPut:async(req,res)=>{
         const {id} = req.params;
         const{_id,createdAt,estado,__v,email,rol,password,...resto} = req.body;
+
+        const user = await Usuario.findOne({_id:id})
+        if (user.estado === 0) {return res.json({msg:'usuario/password no validos estado'})}
+        
         if (password) {
             const salt = bcryptjs.genSaltSync(2);
             resto.password = bcryptjs.hashSync(password,salt);
         }
+        if (email) {resto.email = email;}
+        
         const usuario = await Usuario.findByIdAndUpdate(id,resto);
         res.json({usuario})
     },

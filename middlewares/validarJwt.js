@@ -5,7 +5,7 @@ import Usuario from '../models/usuario.js';
 const generarJWT = (uid='') =>{
     return new Promise((resolve,reject)=>{
         //console.log(uid);
-        //checkToken()
+        //checkToken(token)
         const payload = {uid}
         //crear la encriptacion primero es lo que se encripta y dos es lo que llave para encriptar
         jwt.sign(payload,process.env.SECREPRIVATEKEY,{
@@ -20,29 +20,22 @@ const generarJWT = (uid='') =>{
         })  
     })
 }
-//VALIDAR Los id de categorias del token
+//Validar Los id que vienen en el token 
 const validarJWR = async (req,res,next) =>{
     //almacenar el token
     const token =  req.header('token')
-    //si no hay token
-    if (! token) {
-        // 401 no autorizado
-        return res.status(401).json({msg:'No hay token en la peticion'})
-    }
+    //verificar que halla token
+    if (! token) {return res.status(401).json({msg:'No hay token en la peticion'})}// 401 no autorizado
+    
     //capturar errores si hay token
     try {
         //verificar que el token sea correcto: decodificarlo
         const {uid} = jwt.verify(token,process.env.SECREPRIVATEKEY);
-        //siendo decodificado ver si es valido
+        //siendo decodificado ver si existe usuario con ese id
         const usuario = await Usuario.findById(uid) 
-        if (!usuario) {
-            //no existe usuario para ese token
-            return res.status(401).json({msg:'No hay usuario para ese token'})
-        }
+        if (!usuario) {return res.status(401).json({msg:'No hay usuario para ese token'})}//no existe usuario para ese token
         //verificacion del estado del usuario si existe
-        if (usuario===0) {
-            return res.status(401).json({msg:'Usuario con ese token esta desactivado'})
-        }
+        if (usuario.estado===0) {return res.status(401).json({msg:'Usuario con ese token esta desactivado'})}
         //para tener la info fuera de la aplicacion por que ya esta adentro
         req.usuario = usuario
         next()

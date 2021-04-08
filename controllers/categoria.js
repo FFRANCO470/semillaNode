@@ -42,34 +42,26 @@ const categoriasControllrs ={
         const {_id,estado,createAt,__v,...resto}=req.body;
         //objeto que busca por id y modifica el nombre y descripcion 
         const categoria = await Categoria.findByIdAndUpdate(id,resto);
-        res.json({
-            categoria
-        })
+        res.json({categoria})
     },
     //objeto para activar categoria
     categoriaPutActivar : async (req,res)=>{
         const {id} = req.params;
         //busca por el id y cambia el estado a 1
         const categoria = await Categoria.findByIdAndUpdate(id,{estado:1});
-        res.json({
-            categoria
-        })
+        res.json({categoria})
     },
     //busca por el id y cambia el estado a 0
     categoriaPutDesactivar: async (req,res)=>{
         const {id} = req.params;
         const categoria = await Categoria.findByIdAndUpdate(id,{estado:0});
-        res.json({
-            categoria
-        })
+        res.json({categoria})
     },
     //busca por el id y elimina la categoria
     categoriaDelete: async (req,res)=>{
         const {id} = req.params;
         const categoria = await Categoria.findByIdAndDelete(id);
-        res.json({
-            categoria
-        })
+        res.json({categoria})
     }
 };
 
