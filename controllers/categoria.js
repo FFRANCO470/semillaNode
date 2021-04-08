@@ -38,8 +38,11 @@ const categoriasControllrs ={
     categoriaPut: async (req,res)=>{
         //recibe id de la categoria a modificar
         const {id}=req.params;
-        //apartar vareables de las que no se usan a las que se usan
-        const {_id,estado,createAt,__v,...resto}=req.body;
+        //saber si esta activa la categoria
+        const user = await Categoria.findOne({_id:id})
+        if (user.estado === 0) {return res.json({msg:'Categoria desactivada'})}
+        //descomponer variables
+        const {_id,estado,createAt,__v,...resto}=req.body;//nombre, descripcion
         //objeto que busca por id y modifica el nombre y descripcion 
         const categoria = await Categoria.findByIdAndUpdate(id,resto);
         res.json({categoria})

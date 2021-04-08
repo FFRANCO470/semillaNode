@@ -49,8 +49,16 @@ router.put('/:id',[
     validarCampo],usuarioController.usuarioPut);
 
 router.put('/activar/:id',[
-    
-],usuarioController.usuarioPutActivar);
-router.put('/desactivar/:id',usuarioController.usuarioPutDesactivar);
+    validarJWR,
+    validarRol(),
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existeUsuarioById),
+    validarCampo],usuarioController.usuarioPutActivar);
+router.put('/desactivar/:id',[
+    validarJWR,
+    validarRol(),
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existeUsuarioById),
+    validarCampo],usuarioController.usuarioPutDesactivar);
 
 export default router

@@ -30,63 +30,42 @@ router.get('/:id',[
     validarCampo],categoriasControllrs.categoriaGetById);
 
 router.post('/',[
-    //si inicia sesion bien
     validarJWR,
-    //validar rol de usuario validarRol('ADMIN_ROL','VENDEDOR_ROL')
     validarRol('ALMACENISTA_ROL'),
     //verificar que nombre no este vacio
     check('nombre','Nombre obligatorio').not().isEmpty(),
-    //verificar que no exista nombres duplicados
+    check('descripcion','Descripcion obligatoria').not().isEmpty(),
+    //verificar que no exista nombres duplicado
     check('nombre').custom(existeCategoriaByNombre),
-    validarCampo
-],categoriasControllrs.categoriaPost);
+    validarCampo],categoriasControllrs.categoriaPost);
 
 router.put('/:id',[
-    //si inicia sesion bien
     validarJWR,
-    //validar rol de usuario validarRol('ADMIN_ROL','VENDEDOR_ROL')
     validarRol('ALMACENISTA_ROL'),
-    //verificar que sea un ID
     check('id','ID no valido').isMongoId(),
-    //verificar que existe el id
     check('id').custom(existeCategoriaById),
-    //verificar que no exista nombres duplicados
+    check('nombre','Nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existeCategoriaByNombre),
-    validarCampo
-],categoriasControllrs.categoriaPut);
+    validarCampo],categoriasControllrs.categoriaPut);
 
 router.put('/activar/:id',[
-    //si inicia sesion bien
     validarJWR,
-    //validar rol de usuario validarRol('ADMIN_ROL','VENDEDOR_ROL')
     validarRol('ALMACENISTA_ROL'),
-    //verificar que sea un ID
     check('id','ID no valido').isMongoId(),
-    //verificar que existe el id
     check('id').custom(existeCategoriaById),
-    validarCampo
-],categoriasControllrs.categoriaPutActivar);
+    validarCampo],categoriasControllrs.categoriaPutActivar);
 
 router.put('/desactivar/:id',[
-    //si inicia sesion bien
     validarJWR,
-    //validar rol de usuario validarRol('ADMIN_ROL','VENDEDOR_ROL')
     validarRol('ALMACENISTA_ROL'),
-    //verificar que sea un ID
     check('id','ID no valido').isMongoId(),
-    //verificar que existe el id
     check('id').custom(existeCategoriaById),
-    validarCampo
-],categoriasControllrs.categoriaPutDesactivar);
+    validarCampo],categoriasControllrs.categoriaPutDesactivar);
 
 router.delete('/:id',[
-    //si inicia sesion bien
     validarJWR,
-    //validar rol de usuario validarRol('ADMIN_ROL','VENDEDOR_ROL')
     validarRol('ALMACENISTA_ROL'),
-    //verificar que sea un ID
     check('id','ID no valido').isMongoId(),
-    //verificar que existe el id
     check('id').custom(existeCategoriaById),
     validarCampo
 ],categoriasControllrs.categoriaDelete);
