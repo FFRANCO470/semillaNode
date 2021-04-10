@@ -1,3 +1,4 @@
+import mongodb from 'mongodb'
 import Compra from '../models/compra.js'
 import Persona from '../models/persona.js'
 import { aumentarStock , disminuirStock} from '../helpers/compra.js';
@@ -31,14 +32,16 @@ const compraControllers = {
         if (impuesto) {if (typeof impuesto != "number") {return res.json({msg:'impuesto tipo numero'})}}
         if (total) {if (typeof total != "number") {return res.json({msg:'total tipo numero'})}}
         
-        var mensaje=''
+        var mensaje='';
+        var objectid = mongodb.ObjectID
         detalles.forEach(element => {
-            
-            //if (!element._id) {return res.json({msg:'ID obligatorio'})}
-            //if (!element.articulo) {return res.json({msg:'ID obligatorio'})}
+            if (!element._id) {return mensaje ='id de articulo obligatorio'}
+            if (!objectid.isValid(element._id)) {return mensaje ='id de articulo invalido'}
+            if (!element.articulo) {return mensaje ='nombre de articulo obligatorio'}
             if (!element.cantidad) {return mensaje ='cantidad obligatorio'}
             if (typeof element.cantidad != "number"    ) {return mensaje ='cantidad es numero'}
-            if (!element.costo) {return mensaje ='consto obligatorio'}
+            if (!element.costo) {return mensaje ='costo obligatorio'}
+            if (typeof element.costo != "number"    ) {return mensaje ='costo es numero'}
         });
 
         if (mensaje!='') {

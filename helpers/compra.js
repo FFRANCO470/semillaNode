@@ -1,6 +1,6 @@
 import Articulo from '../models/articulo.js'
 import Compra from '../models/compra.js';
-import mongodb from 'mongodb'
+
 
 const existeCompraById = async (id) =>{
     const existe = await Compra.findById(id)
