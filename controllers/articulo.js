@@ -27,6 +27,10 @@ const articulosControllers={
     },
     articuloPost : async (req,res)=>{
         const {categoria,codigo,nombre,descripcion,precio,costo,stock} = req.body
+
+        const categoriaActiva = await Categoria.findOne({_id:categoria})
+        if (categoriaActiva.estado === 0) {return res.json({msg:'Categoria desactivado'})}
+
         if (precio) {
             if (typeof precio != "number") {return res.json({msg:'Precio tipo numero'})}
         }

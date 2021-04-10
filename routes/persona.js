@@ -1,8 +1,18 @@
 import {Router} from 'express';
 import personasControllers from '../controllers/persona.js';
+import { validarCampo } from '../middlewares/validarCampos.js';
+import { validarJWR } from '../middlewares/validarJwt.js';
+import { validarRol } from '../middlewares/validarRoles.js';
 
 const router = Router();
-router.get('/',personasControllers.personaGet)
+router.get('/',[
+    validarJWR,
+    validarRol("ALMACENISTA_ROL","VENDEDOR_ROL"),
+    validarCampo
+],personasControllers.personaGet)
+
+
+
 router.get('/:id',personasControllers.personaGetById)
 router.post('/',personasControllers.personaPost)
 router.put('/',personasControllers.personaPut)
