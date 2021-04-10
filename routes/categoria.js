@@ -44,7 +44,8 @@ router.put('/:id',[
     validarRol('ALMACENISTA_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeCategoriaById),
-    check('nombre','Nombre obligatorio').not().isEmpty(),
+    //check('nombre','Nombre obligatorio').not().isEmpty(),
+    check('nombre','nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existeCategoriaByNombre),
     validarCampo],categoriasControllrs.categoriaPut);
 

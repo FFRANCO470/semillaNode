@@ -54,6 +54,7 @@ router.put('/:id',[
     //existencias
     check('id').custom(existeArticuloById),
     check('codigo').custom(existeArticuloByCodigo),
+    check('nombre','nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existeArticuloByNombre),
     validarCampo],articulosControllers.articuloPut)
 

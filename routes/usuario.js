@@ -41,9 +41,9 @@ router.post('/login',usuarioController.login);
 
 router.put('/:id',[
     validarJWR,
-    check('nombre','Nombre obligatorio').not().isEmpty(),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeUsuarioById),
+    check('nombre','nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existeUsuarioByName),
     check('email').custom(existeUsuarioByEmail),
     validarCampo],usuarioController.usuarioPut);

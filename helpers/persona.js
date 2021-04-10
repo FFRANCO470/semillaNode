@@ -12,5 +12,13 @@ const existePersonaByEmail = async (email) =>{
     const existe = await Persona.findOne({email})
     if(existe) throw new Error ('Persona con ese email ya existe')
 }
+//cliente o proveedor
+const existePersonaByTipo = async (tipoPersona)=>{
+    if (tipoPersona !== "cliente") {
+        if (tipoPersona !== "proveedor" ) {
+            throw new Error(`Solo tipo cliento o proveedor`)
+        }
+    }
+}
 
-export {existePersonaById, existePersonaByNombre, existePersonaByEmail}
+export {existePersonaById, existePersonaByNombre, existePersonaByEmail, existePersonaByTipo}
