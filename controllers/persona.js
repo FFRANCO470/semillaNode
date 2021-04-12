@@ -82,41 +82,58 @@ const personasControllers = {
             )
         res.json({persona})
     },
-
-
-    
-
-
-
     personaPut: async (req,res) =>{
         const {id} = req.params;
-        const{_id,createdAt,estado,__v,tipoPersona,tipoDocumento,numDocumento,direccion,telefono,email,...resto} = req.body;//nombre
-        
+        const{_id,createdAt,estado,__v,tipoPersona, nombre, email, tipoDocumento,numDocumento,direccion,telefono} = req.body;//nombre   
         const personaEstado = await Persona.findOne({_id:id})
-        if (personaEstado.estado === 0) {return res.json({msg:'Persona desactivada'})}
-
-        if (tipoDocumento) {resto.tipoDocumento = tipoDocumento;}
-        if (numDocumento) {resto.numDocumento = numDocumento;}
-        if (direccion) {resto.direccion = direccion;}
-        if (telefono) {resto.telefono = telefono;}
-        if (email) {resto.email = email;}
-
-        const persona = await Persona.findByIdAndUpdate(id,resto);
-        res.json({persona})
-
+        if (personaEstado.estado === 0) {return res.status(400).json({msg:'Persona desactivada'})}
+        const resto ={}
+        if (tipoPersona) {
+            if (tipoPersona !== "cliente") {
+                if (tipoPersona !== "proveedor" ) {
+                    return res.status(400).json({msg:'Solo tipo cliente o proveedor'})
+                }else {resto.tipoPersona = tipoPersona}
+            }else {resto.tipoPersona = tipoPersona}
+        }
+        if(nombre === "") {return res.status(400).json({msg:'nombre vacio'})}
+        if (nombre) {
+            if (nombre > 50) {return res.status(400).json({msg:'nombre mayor 50 caractere'})}
+            resto.nombre = nombre;
+        }
+        if(email === "") {return res.status(400).json({msg:'email vacio'})}
+        if (email) {
+            if (email > 50) {return res.status(400).json({msg:'email mayor 50 caractere'})}
+            resto.email = email;
+        }
+        if(tipoDocumento === "") {return res.status(400).json({msg:'tipoDocumento vacio'})}
+        if (tipoDocumento) {
+            if (tipoDocumento > 20) {return res.status(400).json({msg:'tipoDocumento mayor 20 caractere'})}
+            resto.tipoDocumento = tipoDocumento;
+        }
+        if(numDocumento === "") {return res.status(400).json({msg:'numDocumento vacio'})}
+        if (numDocumento) {
+            if (numDocumento > 20) {return res.status(400).json({msg:'numDocumento mayor 20 caractere'})}
+            resto.numDocumento = numDocumento;
+        }
+        if(direccion === "") {return res.status(400).json({msg:'direccion vacio'})}
+        if (direccion) {
+            if (direccion > 70) {return res.status(400).json({msg:'direccion mayor 70 caractere'})}
+            resto.direccion = direccion;
+        }
+        if(telefono === "") {return res.status(400).json({msg:'telefono vacio'})}
+        if (telefono) {
+            if (telefono > 15) {return res.status(400).json({msg:'telefono mayor 15 caractere'})}
+            resto.telefono = telefono;
+        }
+        if(Object.entries(resto).length==0){return res.status(400).json({msg:'No actualizo nada'})}
+        const articulo = await Persona.findByIdAndUpdate(id,resto)
+        res.json({articulo})
     },
-
-
-
     personaPutActivar: async (req,res) => {
         const {id} = req.params;
         const persona = await Persona.findByIdAndUpdate(id,{estado:1});
         res.json({persona})
     },
-
-
-
-
     personaPutDesactivar : async (req,res) =>{
         const {id} = req.params;
         const persona = await Persona.findByIdAndUpdate(id,{estado:0});

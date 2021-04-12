@@ -41,41 +41,37 @@ router.get('/listClientes',[
     validarCampo
 ],personasControllers.personaGetListCliente)
 
-
 router.get('/listProveedores',[
     validarJWR,
     validarRol("ALMACENISTA_ROL"),
     validarCampo
 ],personasControllers.personaGetListProveedor)
 
-
-
-
-
-
 router.put('/:id',[
     validarJWR,
     validarRol(),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existePersonaById),
-    check('nombre','nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existePersonaByNombre),
     check('email').custom(existePersonaByEmail),
-    validarCampo],personasControllers.personaPut)
+    validarCampo
+],personasControllers.personaPut)
 
 router.put('/activar/:id',[
     validarJWR,
     validarRol(),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existePersonaById),
-    validarCampo],personasControllers.personaPutActivar)
+    validarCampo
+],personasControllers.personaPutActivar)
 
 router.put('/desactivar/:id',[
     validarJWR,
     validarRol(),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existePersonaById),
-    validarCampo],personasControllers.personaPutDesactivar)
+    validarCampo
+],personasControllers.personaPutDesactivar)
 
 
 export default router

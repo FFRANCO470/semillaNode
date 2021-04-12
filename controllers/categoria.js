@@ -5,8 +5,8 @@ const categoriasControllrs ={
     //objeto para guardar los datos en la base de datos
     categoriaPost:async (req,res)=>{
         const {nombre, descripcion} = req.body;//Recibe los datos que envia el cliente por el body
-        if(nombre.length>50){return res.json({msg:'Nombre mayor 50 caracteres'})}
-        if(descripcion.length>255){return res.json({msg:'Descripcion mayor 255 caracteres'})}
+        if(nombre.length>50){return res.status(400).json({msg:'Nombre mayor 50 caracteres'})}
+        if(descripcion.length>255){return res.status(400).json({msg:'Descripcion mayor 255 caracteres'})}
         const categoria = Categoria({nombre, descripcion});//crea la categiria y los llena con los datos recibidos por el cliente
         await categoria.save();//guardar en la base de datos
         res.json({categoria})//responder el usuario
@@ -35,12 +35,12 @@ const categoriasControllrs ={
     categoriaPut: async (req,res)=>{
         const {id}=req.params;//recibe id de la categoria a modificar
         const user = await Categoria.findOne({_id:id})//saber si esta activa la categoria
-        if (user.estado === 0) {return res.json({msg:'Categoria desactivada'})}
+        if (user.estado === 0) {return res.status(400).json({msg:'Categoria desactivada'})}
         //descomponer variables
         const {_id,estado,createAt,__v,...resto}=req.body;//nombre, descripcion
-        if(resto.nombre.length>50){return res.json({msg:'Nombre mayor 50 caracteres'})}
+        if(resto.nombre.length>50){return res.status(400).json({msg:'Nombre mayor 50 caracteres'})}
         if(resto.descripcion){
-            if(resto.descripcion.length>255){return res.json({msg:'Descripcion mayor 255 caracteres'})}
+            if(resto.descripcion.length>255){return res.status(400).json({msg:'Descripcion mayor 255 caracteres'})}
         }
         const categoria = await Categoria.findByIdAndUpdate(id,resto);//objeto que busca por id y modifica el nombre y descripcion 
         res.json({categoria})
