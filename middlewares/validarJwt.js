@@ -5,12 +5,10 @@ import Usuario from '../models/usuario.js';
 const generarJWT = (uid='') =>{
     return new Promise((resolve,reject)=>{
         //console.log(uid);
-        //checkToken(token)
-        const payload = {uid}
+        const payload = {uid}//checkToken(token)
         //crear la encriptacion primero es lo que se encripta y dos es lo que llave para encriptar
         jwt.sign(payload,process.env.SECREPRIVATEKEY,{
-            //fecha de expiracion
-            expiresIn:'7d'
+            expiresIn:'7d'//fecha de expiracion
         },(err,token)=>{
             if(err){
                 reject('No se pudo generar el token')
@@ -22,26 +20,18 @@ const generarJWT = (uid='') =>{
 }
 //Validar Los id que vienen en el token 
 const validarJWR = async (req,res,next) =>{
-    //almacenar el token
-    const token =  req.header('token')
-    //verificar que halla token
-    if (! token) {return res.status(401).json({msg:'No hay token en la peticion'})}// 401 no autorizado
-    
+    const token =  req.header('token')//almacenar el token
+    if (! token) {return res.status(401).json({msg:'No hay token en la peticion'})}// 401 no autorizado //verificar que halla token
     //capturar errores si hay token
     try {
-        //verificar que el token sea correcto: decodificarlo
-        const {uid} = jwt.verify(token,process.env.SECREPRIVATEKEY);
-        //siendo decodificado ver si existe usuario con ese id
-        const usuario = await Usuario.findById(uid) 
+        const {uid} = jwt.verify(token,process.env.SECREPRIVATEKEY);// decodifiacr token
+        const usuario = await Usuario.findById(uid) //existe usuario con ese id
         if (!usuario) {return res.status(401).json({msg:'No hay usuario para ese token'})}//no existe usuario para ese token
-        //verificacion del estado del usuario si existe
-        if (usuario.estado===0) {return res.status(401).json({msg:'Usuario con ese token esta desactivado'})}
-        //para tener la info fuera de la aplicacion por que ya esta adentro
-        req.usuario = usuario
+        if (usuario.estado===0) {return res.status(401).json({msg:'Usuario con ese token esta desactivado'})}//verificacion del estado del usuario si existe
+        req.usuario = usuario//para tener la info fuera de la aplicacion por que ya esta adentro
         next()
     } catch (error) {
-        //401 no autorizado
-        return res.status(401).json({msg:'token no valido'})
+        return res.status(401).json({msg:'token no valido'})//401 no autorizado
     }
 }
 //chequear token

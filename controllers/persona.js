@@ -23,6 +23,29 @@ const personasControllers = {
         const articulo = await Persona.findOne({_id:id})
         res.json({articulo})
     },
+
+    personaGetListCliente : async (req,res)=>{
+        const value = req.query.value;
+        const persona = await Persona.find({
+            $and:[
+                {tipoPersona:"cliente"},
+                $or=[
+                {nombre:new RegExp(value,'i')},
+                {tipoDocumento:new RegExp(value,'i')},
+                {numDocumento:new RegExp(value,'i')},
+                {direccion:new RegExp(value,'i')},
+                {telefono:new RegExp(value,'i')},
+                {email:new RegExp(value,'i')},
+                ]
+            ]
+        })
+    },
+
+    personaGetListProveedor : async (req,res)=>{
+
+    },
+
+
     personaPost: async (req,res)=>{
         const {tipoPersona,nombre,tipoDocumento,numDocumento,direccion,telefono,email} = req.body;
         const persona = Persona({tipoPersona,nombre,tipoDocumento,numDocumento,direccion,telefono,email});

@@ -20,15 +20,19 @@ const existeTipoComprobante = async (tipoComprobante) =>{
 
 // const existeDetalle = (detalles)=>{
 //     var objectid = mongodb.ObjectID
-//     detalles.map( (articulo)=>{
-//         //if (!articulo._id) {throw new Error('id obligatorio')}
-//         //if (!objectid.isValid(articulo._id)) {throw new Error('no es un id')}
+//     detalles.foreach( (articulo)=>{
+//         if (!articulo._id) {throw new Error('id obligatorio')}
+//         if (!objectid.isValid(articulo._id)) {throw new Error('no es un id')}
 
-//         //if (!articulo.articulo) {throw new Error('articulo obligatorio')}
-//         //if (!articulo.cantidad) {throw new Error('cantidad obligatorio')}
-//         //if (!articulo.costo) {throw new Error('costo obligatorio')}
+//         if (!articulo.articulo) {throw new Error('articulo obligatorio')}
+//         if (!articulo.cantidad) {throw new Error('cantidad obligatorio')}
+//         if (typeof element.cantidad != "number"  ) {throw new Error('cantidad numero')}
+//         if (!articulo.costo) {throw new Error('costo obligatorio')}
+//         if (typeof element.costo != "number") {throw new Error('costo numero')}
 //     })
 // }
+
+
 
 //if (resto.categoria) {
             //validar que se un id

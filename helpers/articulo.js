@@ -14,5 +14,14 @@ const existeArticuloByCodigo = async (codigo)=>{
     const existe = await Articulo.findOne({codigo})
     if (existe) throw new Error('Articulo con codigo ya existente')
 }
+const existeArticuloByIdlista = async (element)=>{
+    const existe = await Articulo.findOne({_id:element._id})
 
-export {existeArticuloById, existeArticuloByNombre, existeArticuloByCodigo}
+    if(!existe){
+        return 'no'
+    }else{
+        return existe
+    }
+}
+
+export {existeArticuloById,existeArticuloByIdlista, existeArticuloByNombre, existeArticuloByCodigo}

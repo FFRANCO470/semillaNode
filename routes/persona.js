@@ -7,10 +7,12 @@ import {check} from 'express-validator';
 import { existePersonaByEmail, existePersonaById, existePersonaByNombre, existePersonaByTipo } from '../helpers/persona.js';
 
 const router = Router();
-router.get('/',[
-    validarJWR,
-    validarRol("ALMACENISTA_ROL","VENDEDOR_ROL"),
-    validarCampo],personasControllers.personaGet)
+router.get('/',
+    //[
+    //validarJWR,
+    //validarRol("ALMACENISTA_ROL","VENDEDOR_ROL"),
+    //validarCampo],
+    personasControllers.personaGet)
 
 router.get('/:id',[
     validarJWR,
@@ -18,6 +20,14 @@ router.get('/:id',[
     check('id','ID no valido').isMongoId(),
     check('id').custom(existePersonaById),
     validarCampo],personasControllers.personaGetById)
+
+router.get('listClientes/',personasControllers.personaGetListCliente)
+
+
+router.get('listProveedores/',personasControllers.personaGetListProveedor)
+
+
+
 
 router.post('/',[
     validarJWR,

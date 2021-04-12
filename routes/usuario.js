@@ -4,9 +4,33 @@ import { validarCampo } from '../middlewares/validarCampos.js';
 import { validarJWR } from '../middlewares/validarJwt.js';
 import { validarRol } from '../middlewares/validarRoles.js';
 import {check} from 'express-validator';
-import { existeUsuarioByEmail, existeUsuarioById, existeUsuarioByName, existeUsuarioByRol } from '../helpers/usuarios.js';
+import { existeUsuarioByEmail, existeUsuarioById, existeUsuarioByName, contarUsuarioNombre,existeUsuarioByRol, contarPassword, contarUsuarioCorreo  } from '../helpers/usuarios.js';
 
 const router = Router();
+
+router.post('/',[
+    //verificar que los campos no esten vacios
+    check('nombre','Nombre obligatorio').not().isEmpty(),
+    check('email','Email obligatorio').not().isEmpty(),
+    check('password','Clave obligatoria').not().isEmpty(),
+    check('rol','Rol obligatorio').not().isEmpty(),
+    //verificar del contenido
+    check('nombre').custom(existeUsuarioByName),
+    check('email').custom(existeUsuarioByEmail),
+    check('rol').custom(existeUsuarioByRol),
+    check('password').custom(contarPassword ),
+    //contar
+    check('nombre').custom(contarUsuarioNombre),
+    check('email').custom(contarUsuarioCorreo),
+    check('password').custom(contarPassword ),
+    validarCampo
+],usuarioController.usuarioPost);
+
+router.post('/login',[
+    check('email','Email obligatorio').not().isEmpty(),
+    check('password','Clave obligatoria').not().isEmpty(),
+    validarCampo
+],usuarioController.login);
 
 router.get('/',[
     //validar sesion
@@ -14,51 +38,40 @@ router.get('/',[
     //validar rol
     validarRol(),
     //mostrar errores personalizados
-    validarCampo],usuarioController.usuarioGet);
+    validarCampo
+],usuarioController.usuarioGet);
 
 router.get('/:id',[
     validarJWR,
     validarRol(),
-    //verificar que sea id
     check('id','ID no valido').isMongoId(),
-    //verificar existencia del id
     check('id').custom(existeUsuarioById),
-    validarCampo],usuarioController.usuarioGetId);
-
-router.post('/',[
-    //verificar que los campos no esten vacios
-    check('nombre','Nombre obligatorio').not().isEmpty(),
-    check('email','Correo obligatorio').not().isEmpty(),
-    check('password','Clave obligatoria').not().isEmpty(),
-    check('rol','Rol obligatorio').not().isEmpty(),
-    //verificar que no existan duplicados
-    check('nombre').custom(existeUsuarioByName),
-    check('email').custom(existeUsuarioByEmail),
-    check('rol').custom(existeUsuarioByRol),
-    validarCampo],usuarioController.usuarioPost);
-
-router.post('/login',usuarioController.login);
+    validarCampo
+],usuarioController.usuarioGetId);
 
 router.put('/:id',[
     validarJWR,
+    validarRol(),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeUsuarioById),
-    check('nombre','nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existeUsuarioByName),
     check('email').custom(existeUsuarioByEmail),
-    validarCampo],usuarioController.usuarioPut);
+    validarCampo
+],usuarioController.usuarioPut);
 
 router.put('/activar/:id',[
     validarJWR,
     validarRol(),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeUsuarioById),
-    validarCampo],usuarioController.usuarioPutActivar);
+    validarCampo
+],usuarioController.usuarioPutActivar);
 router.put('/desactivar/:id',[
     validarJWR,
     validarRol(),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeUsuarioById),
-    validarCampo],usuarioController.usuarioPutDesactivar);
+    validarCampo
+],usuarioController.usuarioPutDesactivar);
 
 export default router
