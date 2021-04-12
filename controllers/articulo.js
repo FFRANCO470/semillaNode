@@ -2,6 +2,31 @@ import Articulo from '../models/articulo.js';
 import mongodb from 'mongodb'
 import Categoria from '../models/categoria.js';
 const articulosControllers={
+    articuloPost : async (req,res)=>{
+        const {categoria,codigo,nombre,descripcion,precio,costo,stock} = req.body
+        const categoriaActiva = await Categoria.findOne({_id:categoria})
+        if (categoriaActiva.estado === 0) {return res.status(400).json({msg:'Categoria desactivado'})}
+        if(codigo.length>64){return res.status(400).json({msg:'Codigo mayor 64 caracteres'})}
+        if(nombre.length>50){return res.status(400).json({msg:'Nombre mayor 50 caracteres'})}
+        if (descripcion) {
+            if(descripcion.length>255){return res.status(400).json({msg:'Descripcion mayor 255 caracteres'})}
+        }
+        if (precio) {
+            if (typeof precio != "number") {return res.status(400).json({msg:'Precio tipo numero'})}
+            if (precio < 0) {return res.status(400).json({msg:'Precio negativo'})}
+        }
+        if (costo) {
+            if (typeof costo != "number") {return res.status(400).json({msg:'Costo tipo numero'})}
+            if (costo < 0) {return res.status(400).json({msg:'Costo negativo'})}
+        }
+        if (stock) {
+            if (typeof stock != "number") {return res.status(400).json({msg:'Stock tipo numero'})}
+            if (stock < 0) {return res.status(400).json({msg:'Stock negativo'})}
+        }
+        const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio,costo,stock})
+        await articulo.save()
+        res.json({articulo})
+    },
     articuloGet : async (req,res)=>{
         const value = req.query.value;
         const articulos = await Articulo
@@ -11,8 +36,7 @@ const articulosControllers={
                     {descripcion:new RegExp(value,'i')}
                 ]
             })
-            //traer datos de otro modelo
-            .populate('categoria','nombre')
+            .populate('categoria','nombre')//traer datos de otro modelo
         res.json({articulos})
     },
     articuloGetById : async (req,res) => {
@@ -25,54 +49,56 @@ const articulosControllers={
         const articulos = await Articulo.find({categoria:id})   //.findOne({_id:id})
         res.json({articulos})
     },
-    articuloPost : async (req,res)=>{
-        const {categoria,codigo,nombre,descripcion,precio,costo,stock} = req.body
-
-        const categoriaActiva = await Categoria.findOne({_id:categoria})
-        if (categoriaActiva.estado === 0) {return res.json({msg:'Categoria desactivado'})}
-
-        if (precio) {
-            if (typeof precio != "number") {return res.json({msg:'Precio tipo numero'})}
-        }
-        if (costo) {
-            if (typeof costo != "number") {return res.json({msg:'Costo tipo numero'})}
-        }
-        if (stock) {
-            if (typeof stock != "number") {return res.json({msg:'Stock tipo numero'})}
-        }
-        const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio,costo,stock})
-        await articulo.save()
-        res.json({articulo})
-    },
     articuloPut : async (req,res)=>{
         const {id} = req.params
         const {_id,estado,createAt,__v,...resto} = req.body
 
         const user = await Articulo.findOne({_id:id})
-        if (user.estado === 0) {return res.json({msg:'Articulo desactivado'})}
+        if (user.estado === 0) {return res.status(400).json({msg:'Articulo desactivado'})}
 
-        //si biene precio que sea numero
+        if(resto.nombre == "") {return res.status(400).json({msg:'Nombre vacio'})}
+        if (resto.nombre) {
+            if (resto.nombre.length > 50) {return res.status(400).json({msg:'Nombre mayor 50 caracteres'})}
+        }
+
+        if(resto.codigo == "") {return res.status(400).json({msg:'Codigo vacio'})}
+        if (resto.codigo) {
+            if (resto.codigo.length > 64) {return res.status(400).json({msg:'Codigo mayor 64 caracteres'})}
+        }
+
+        if(resto.descripcion == "") {return res.status(400).json({msg:'Descripcion vacio'})}
+        if (resto.descripcion) {
+            if (resto.descripcion.length > 255) {return res.status(400).json({msg:'Descripcion mayor 255 caracteres'})}
+        }
+
+        if(resto.precio === "") {return res.status(400).json({msg:'precio vacio'})}
         if (resto.precio) {
-            if (typeof resto.precio != "number") {return res.json({msg:'Precio tipo numero'})}
+            if (typeof resto.precio != "number") {return res.status(400).json({msg:'Precio tipo numero'})}//si biene precio que sea numero
+            if (resto.precio < 0) {return res.status(400).json({msg:'Precio negativo'})}
         }
-        //si biene costo que sea numero
+
+        if(resto.costo === "") {return res.status(400).json({msg:'Costo vacio'})}
         if (resto.costo) {
-            if (typeof resto.costo != "number") {return res.json({msg:'Costo tipo numero'})}
+            if (typeof resto.costo != "number") {return res.status(400).json({msg:'Costo tipo numero'})}//si biene costo que sea numero
+            if (resto.costo < 0) {return res.status(400).json({msg:'Costo negativo'})}
         }
-        //si biene stock que sea numero
+
+        if(resto.stock === "") {return res.status(400).json({msg:'Stock vacio'})}
         if (resto.stock) {
-            if (typeof resto.stock != "number") {return res.json({msg:'Stock tipo numero'})}
+            if (typeof resto.stock != "number") {return res.status(400).json({msg:'Stock tipo numero'})}//si biene stock que sea numero
+            if (resto.stock < 0) {return res.status(400).json({msg:'Stock negativo'})}
         }
 
+        if(resto.categoria === ""){return res.status(400).json({msg:'Categoria vacia'})}
         if (resto.categoria) {
-            //validar que se un id
-            var objectid = mongodb.ObjectID;
-            if (!objectid.isValid(resto.categoria)) {return res.json({msg:'ID de categoria no valido'})}
-            //verificar que exista categoria con ese id
-            const existenciaCategoria = await Categoria.findOne({_id:resto.categoria})
-            if (!existenciaCategoria) {return res.json({msg:'ID sin categoria'})}
+            var objectid = mongodb.ObjectID;//validar que se un id
+            if (!objectid.isValid(resto.categoria)) {return res.status(400).json({msg:'ID de categoria no valido'})}
+            const existenciaCategoria = await Categoria.findOne({_id:resto.categoria})//verificar que exista categoria con ese id
+            if (!existenciaCategoria) {return res.status(400).json({msg:'ID sin categoria'})}
+            if(existenciaCategoria.estado == 0) {return res.status(400).json({msg:'Categoria desactivada'})}
         }
 
+        if(Object.entries(resto).length==0){return res.status(400).json({msg:'No actualizo nada'})}
         const articulo = await Articulo.findByIdAndUpdate(id,resto)//categoria, codigo, nombre, descripcion, precio, costo, stock
         res.json({articulo})
     },

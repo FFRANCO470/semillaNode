@@ -16,7 +16,6 @@ const existeArticuloByCodigo = async (codigo)=>{
 }
 const existeArticuloByIdlista = async (element)=>{
     const existe = await Articulo.findOne({_id:element._id})
-
     if(!existe){
         return 'no'
     }else{
@@ -24,4 +23,4 @@ const existeArticuloByIdlista = async (element)=>{
     }
 }
 
-export {existeArticuloById,existeArticuloByIdlista, existeArticuloByNombre, existeArticuloByCodigo}
+export {existeArticuloById, existeArticuloByIdlista, existeArticuloByNombre, existeArticuloByCodigo}

@@ -42,7 +42,6 @@ const categoriasControllrs ={
         if(resto.descripcion){
             if(resto.descripcion.length>255){return res.json({msg:'Descripcion mayor 255 caracteres'})}
         }
-        console.log(resto);
         const categoria = await Categoria.findByIdAndUpdate(id,resto);//objeto que busca por id y modifica el nombre y descripcion 
         res.json({categoria})
     },

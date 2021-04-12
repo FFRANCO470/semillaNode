@@ -8,60 +8,55 @@ import { validarJWR } from '../middlewares/validarJwt.js';
 import { validarRol } from '../middlewares/validarRoles.js';
 const router = Router();
 
-router.get('/',[
-    //validar sesion
+router.post('/',[
     validarJWR,
-    //validar rol validarRol('ADMIN_ROL','VENDEDOR_ROL')
+    validarRol('ALMACENISTA_ROL'),//validarRol("ALMACENISTA_ROL","VENDEDOR_ROL")
+    check('codigo','Codigo obligatoria').not().isEmpty(),
+    check('nombre','Nombre obligatoria').not().isEmpty(),
+    check('categoria','Categoria obligatoria').not().isEmpty(),
+    check('categoria','ID no valido').isMongoId(),
+    check('categoria').custom(existeCategoriaById),
+    check('codigo').custom(existeArticuloByCodigo),
+    check('nombre').custom(existeArticuloByNombre),
+    validarCampo
+],articulosControllers.articuloPost)
+
+router.get('/',[
+    validarJWR,//validar sesion
     validarRol("ALMACENISTA_ROL","VENDEDOR_ROL"),
-    //Mostrar errores personalizados
-    validarCampo],articulosControllers.articuloGet);
+    validarCampo//Mostrar errores personalizados
+],articulosControllers.articuloGet);
 
 router.get('/:id',[
     validarJWR,
     validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
-    //es un id
-    check('id','ID no valido').isMongoId(),
-    //existe el id
-    check('id').custom(existeArticuloById),
-    validarCampo],articulosControllers.articuloGetById)
+    check('id','ID no valido').isMongoId(),//es un id
+    check('id').custom(existeArticuloById),//existe el id
+    validarCampo
+],articulosControllers.articuloGetById)
 
 router.get('/categoria/:id',[
     validarJWR,
     validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeCategoriaById),
-    validarCampo],articulosControllers.articulosGetCategoria)
-
-router.post('/',[
-    validarJWR,
-    validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
-    //campos oblgatorias
-    check('codigo','Codigo obligatoria').not().isEmpty(),
-    check('nombre','Nombre obligatoria').not().isEmpty(),
-    check('categoria','Categoria obligatoria').not().isEmpty(),
-    check('categoria','ID no valido').isMongoId(),
-    check('categoria').custom(existeCategoriaById),
-    //no se repitan
-    check('codigo').custom(existeArticuloByCodigo),
-    check('nombre').custom(existeArticuloByNombre),
-    validarCampo],articulosControllers.articuloPost)
+    validarCampo
+],articulosControllers.articulosGetCategoria)
 
 //categoria,codigo,nombre,descripcion,precio,costo,stock
 router.put('/:id',[
     validarJWR,
-    validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
+    validarRol('ALMACENISTA_ROL'),
     check('id','ID no valido').isMongoId(),
-    //existencias
     check('id').custom(existeArticuloById),
     check('codigo').custom(existeArticuloByCodigo),
-    check('nombre','nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existeArticuloByNombre),
-    validarCampo],articulosControllers.articuloPut)
-
+    validarCampo
+],articulosControllers.articuloPut)
 
 router.put('/desactivar/:id',[
     validarJWR,
-    validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
+    validarRol('ALMACENISTA_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeArticuloById),
     validarCampo
@@ -69,7 +64,7 @@ router.put('/desactivar/:id',[
 
 router.put('/activar/:id',[
     validarJWR,
-    validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
+    validarRol('ALMACENISTA_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeArticuloById),
     validarCampo
