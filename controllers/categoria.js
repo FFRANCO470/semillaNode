@@ -5,6 +5,8 @@ const categoriasControllrs ={
     //objeto para guardar los datos en la base de datos
     categoriaPost:async (req,res)=>{
         const {nombre, descripcion} = req.body;//Recibe los datos que envia el cliente por el body
+        if(nombre.length>50){return res.json({msg:'Nombre mayor 50 caracteres'})}
+        if(descripcion.length>255){return res.json({msg:'Descripcion mayor 255 caracteres'})}
         const categoria = Categoria({nombre, descripcion});//crea la categiria y los llena con los datos recibidos por el cliente
         await categoria.save();//guardar en la base de datos
         res.json({categoria})//responder el usuario

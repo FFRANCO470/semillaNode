@@ -47,7 +47,7 @@ const usuarioController={
         const user = await Usuario.findOne({_id:id})
         if (user.estado === 0) {return res.json({msg:'usuario desactivado estado'})}
         if (email && email!="") {resto.email = email}
-        
+        if (email && email.length > 50) {return res.json({msg:'Email mayor de 50 caracteres'})}
         console.log(rol);
 
         if (rol && rol !=="") {
@@ -59,12 +59,14 @@ const usuarioController={
                 } else {resto.rol = rol;}
             }else{resto.rol = rol;}
         }
+        if (password && password.length>64) {return res.json({msg:'Password mayor de 64 caracteres'})}
         if (password && password != "") {
             const salt = bcryptjs.genSaltSync(2);
             resto.password = bcryptjs.hashSync(password,salt);
         }
         if(Object.entries(resto).length==0){return res.json({msg:'No actualizo nada'})}
         if(resto.nombre==""){return res.json({msg:'Nombre vacio'})}
+        if(resto.nombre.length > 50){return res.json({msg:'Nombre mayor de 50 caracteres'})}
         const usuario = await Usuario.findByIdAndUpdate(id,resto);
         res.json({usuario})
     },
