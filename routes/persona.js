@@ -7,27 +7,6 @@ import {check} from 'express-validator';
 import { existePersonaByEmail, existePersonaById, existePersonaByNombre, existePersonaByTipo } from '../helpers/persona.js';
 
 const router = Router();
-router.get('/',
-    //[
-    //validarJWR,
-    //validarRol("ALMACENISTA_ROL","VENDEDOR_ROL"),
-    //validarCampo],
-    personasControllers.personaGet)
-
-router.get('/:id',[
-    validarJWR,
-    validarRol(),
-    check('id','ID no valido').isMongoId(),
-    check('id').custom(existePersonaById),
-    validarCampo],personasControllers.personaGetById)
-
-router.get('listClientes/',personasControllers.personaGetListCliente)
-
-
-router.get('listProveedores/',personasControllers.personaGetListProveedor)
-
-
-
 
 router.post('/',[
     validarJWR,
@@ -38,7 +17,41 @@ router.post('/',[
     check('nombre').custom(existePersonaByNombre),
     check('email','Email obligatorio').not().isEmpty(),
     check('email').custom(existePersonaByEmail),
-    validarCampo],personasControllers.personaPost)
+    validarCampo
+],personasControllers.personaPost)
+
+//validarRol("ALMACENISTA_ROL","VENDEDOR_ROL")
+router.get('/',[
+    validarJWR,
+    validarRol(),
+    validarCampo
+],personasControllers.personaGet)
+
+router.get('/byid/:id',[
+    validarJWR,
+    validarRol(),
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existePersonaById),
+    validarCampo
+],personasControllers.personaGetById)
+
+router.get('/listClientes',[
+    validarJWR,
+    validarRol("VENDEDOR_ROL"),
+    validarCampo
+],personasControllers.personaGetListCliente)
+
+
+router.get('/listProveedores',[
+    validarJWR,
+    validarRol("ALMACENISTA_ROL"),
+    validarCampo
+],personasControllers.personaGetListProveedor)
+
+
+
+
+
 
 router.put('/:id',[
     validarJWR,

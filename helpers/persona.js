@@ -16,7 +16,7 @@ const existePersonaByEmail = async (email) =>{
 const existePersonaByTipo = async (tipoPersona)=>{
     if (tipoPersona !== "cliente") {
         if (tipoPersona !== "proveedor" ) {
-            throw new Error(`Solo tipo cliento o proveedor`)
+            throw new Error(`Solo tipo cliente o proveedor`)
         }
     }
 }
