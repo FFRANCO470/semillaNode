@@ -28,28 +28,28 @@ const categoriasControllrs ={
     //objeto para pedir algo de la lista tieneindo el id
     categoriaGetById: async(req,res)=>{
         const {id}=req.params;
-        //buscar y devolver como un objeto
-        const categoria = await Categoria.findOne({_id:id})
+        const categoria = await Categoria.findOne({_id:id})//buscar y devolver como un objeto
         res.json({categoria})
     },
     //objeto para actualizar
     categoriaPut: async (req,res)=>{
-        //recibe id de la categoria a modificar
-        const {id}=req.params;
-        //saber si esta activa la categoria
-        const user = await Categoria.findOne({_id:id})
+        const {id}=req.params;//recibe id de la categoria a modificar
+        const user = await Categoria.findOne({_id:id})//saber si esta activa la categoria
         if (user.estado === 0) {return res.json({msg:'Categoria desactivada'})}
         //descomponer variables
         const {_id,estado,createAt,__v,...resto}=req.body;//nombre, descripcion
-        //objeto que busca por id y modifica el nombre y descripcion 
-        const categoria = await Categoria.findByIdAndUpdate(id,resto);
+        if(resto.nombre.length>50){return res.json({msg:'Nombre mayor 50 caracteres'})}
+        if(resto.descripcion){
+            if(resto.descripcion.length>255){return res.json({msg:'Descripcion mayor 255 caracteres'})}
+        }
+        console.log(resto);
+        const categoria = await Categoria.findByIdAndUpdate(id,resto);//objeto que busca por id y modifica el nombre y descripcion 
         res.json({categoria})
     },
     //objeto para activar categoria
     categoriaPutActivar : async (req,res)=>{
         const {id} = req.params;
-        //busca por el id y cambia el estado a 1
-        const categoria = await Categoria.findByIdAndUpdate(id,{estado:1});
+        const categoria = await Categoria.findByIdAndUpdate(id,{estado:1});//busca por el id y cambia el estado a 1
         res.json({categoria})
     },
     //busca por el id y cambia el estado a 0

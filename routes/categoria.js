@@ -17,17 +17,8 @@ router.post('/',[
     check('nombre','Nombre obligatorio').not().isEmpty(),//verificar que nombre no este vacio
     check('descripcion','Descripcion obligatoria').not().isEmpty(),
     check('nombre').custom(existeCategoriaByNombre),//verificar que no exista nombres duplicado
-    //check('nombre').custom(contarCategoriaNombre),
-    //check('descripcion').custom(contarCategoriaDescripcion),
     validarCampo
 ],categoriasControllrs.categoriaPost);
-
-
-
-
-
-
-
 
 router.get('/',[
     //validar sesion
@@ -35,18 +26,16 @@ router.get('/',[
     //validar rol validarRol('ADMIN_ROL','VENDEDOR_ROL')
     validarRol('ALMACENISTA_ROL'),
     //Mostrar errores personalizados
-    validarCampo],categoriasControllrs.categoriaGet);
+    validarCampo
+],categoriasControllrs.categoriaGet);
 
 router.get('/:id',[
     validarJWR,
     validarRol('ALMACENISTA_ROL'),
-    //verificar que sea un ID
-    check('id','ID no valido').isMongoId(),
-    //verificar que existe el id
-    check('id').custom(existeCategoriaById),
-    validarCampo],categoriasControllrs.categoriaGetById);
-
-
+    check('id','ID no valido').isMongoId(),//verificar que sea un ID
+    check('id').custom(existeCategoriaById),//verificar que existe el id
+    validarCampo
+],categoriasControllrs.categoriaGetById);
 
 router.put('/:id',[
     validarJWR,
@@ -56,21 +45,24 @@ router.put('/:id',[
     //check('nombre','Nombre obligatorio').not().isEmpty(),
     check('nombre','nombre obligatorio').not().isEmpty(),
     check('nombre').custom(existeCategoriaByNombre),
-    validarCampo],categoriasControllrs.categoriaPut);
+    validarCampo
+],categoriasControllrs.categoriaPut);
 
 router.put('/activar/:id',[
     validarJWR,
     validarRol('ALMACENISTA_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeCategoriaById),
-    validarCampo],categoriasControllrs.categoriaPutActivar);
+    validarCampo
+],categoriasControllrs.categoriaPutActivar);
 
 router.put('/desactivar/:id',[
     validarJWR,
     validarRol('ALMACENISTA_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeCategoriaById),
-    validarCampo],categoriasControllrs.categoriaPutDesactivar);
+    validarCampo
+],categoriasControllrs.categoriaPutDesactivar);
 
 router.delete('/:id',[
     validarJWR,
