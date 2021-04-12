@@ -6,11 +6,28 @@ import categoriasControllrs from '../controllers/categoria.js';
 import {check} from 'express-validator';
 //para validar ruta de get por ID 
 import {validarCampo} from '../middlewares/validarCampos.js';
-import {existeCategoriaById, existeCategoriaByNombre} from '../helpers/categorias.js';
+import {existeCategoriaById, existeCategoriaByNombre, contarCategoriaNombre, contarCategoriaDescripcion} from '../helpers/categorias.js';
 import { validarJWR } from '../middlewares/validarJwt.js'
 import { validarRol } from '../middlewares/validarRoles.js';
 //crear redireccionador
 const router = Router();
+router.post('/',[
+    validarJWR,
+    validarRol('ALMACENISTA_ROL'),
+    check('nombre','Nombre obligatorio').not().isEmpty(),//verificar que nombre no este vacio
+    check('descripcion','Descripcion obligatoria').not().isEmpty(),
+    check('nombre').custom(existeCategoriaByNombre),//verificar que no exista nombres duplicado
+    //check('nombre').custom(contarCategoriaNombre),
+    //check('descripcion').custom(contarCategoriaDescripcion),
+    validarCampo
+],categoriasControllrs.categoriaPost);
+
+
+
+
+
+
+
 
 router.get('/',[
     //validar sesion
@@ -29,15 +46,7 @@ router.get('/:id',[
     check('id').custom(existeCategoriaById),
     validarCampo],categoriasControllrs.categoriaGetById);
 
-router.post('/',[
-    validarJWR,
-    validarRol('ALMACENISTA_ROL'),
-    //verificar que nombre no este vacio
-    check('nombre','Nombre obligatorio').not().isEmpty(),
-    check('descripcion','Descripcion obligatoria').not().isEmpty(),
-    //verificar que no exista nombres duplicado
-    check('nombre').custom(existeCategoriaByNombre),
-    validarCampo],categoriasControllrs.categoriaPost);
+
 
 router.put('/:id',[
     validarJWR,

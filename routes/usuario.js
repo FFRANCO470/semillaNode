@@ -4,7 +4,7 @@ import { validarCampo } from '../middlewares/validarCampos.js';
 import { validarJWR } from '../middlewares/validarJwt.js';
 import { validarRol } from '../middlewares/validarRoles.js';
 import {check} from 'express-validator';
-import { existeUsuarioByEmail, existeUsuarioById, existeUsuarioByName, contarUsuarioNombre,existeUsuarioByRol, contarPassword, contarUsuarioCorreo  } from '../helpers/usuarios.js';
+import { existeUsuarioByEmail, existeUsuarioById, existeUsuarioByName, existeUsuarioByRol } from '../helpers/usuarios.js';
 
 const router = Router();
 
@@ -18,11 +18,6 @@ router.post('/',[
     check('nombre').custom(existeUsuarioByName),
     check('email').custom(existeUsuarioByEmail),
     check('rol').custom(existeUsuarioByRol),
-    check('password').custom(contarPassword ),
-    //contar
-    check('nombre').custom(contarUsuarioNombre),
-    check('email').custom(contarUsuarioCorreo),
-    check('password').custom(contarPassword ),
     validarCampo
 ],usuarioController.usuarioPost);
 

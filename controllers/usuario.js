@@ -6,6 +6,9 @@ import { generarJWT } from '../middlewares/validarJwt.js';
 const usuarioController={
     usuarioPost:async(req,res)=>{
         const {nombre,email,password,rol} = req.body;// recibir datos del cliente
+        if(nombre.length>50){return res.json({msg:'Nombre mayour 50 caracteres'})}
+        if(email.length>50){return res.json({msg:'Nombre mayour 50 caracteres'})}
+        if(password.length>50){return res.json({msg:'Nombre mayour 50 caracteres'})}
         const usuario = Usuario({nombre,email,password,rol});//crear el usuario con datos recibidos
         const salt = bcryptjs.genSaltSync(2);//capas de encriptacion de password
         usuario.password = bcryptjs.hashSync(password,salt);//encriptacion de password

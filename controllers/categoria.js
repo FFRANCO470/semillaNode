@@ -2,6 +2,13 @@
 import Categoria from "../models/categoria.js"
 //variable global para controloar la cantidad de controles exportados es decir exportar uno y no muchos
 const categoriasControllrs ={
+    //objeto para guardar los datos en la base de datos
+    categoriaPost:async (req,res)=>{
+        const {nombre, descripcion} = req.body;//Recibe los datos que envia el cliente por el body
+        const categoria = Categoria({nombre, descripcion});//crea la categiria y los llena con los datos recibidos por el cliente
+        await categoria.save();//guardar en la base de datos
+        res.json({categoria})//responder el usuario
+    },
     //objeto para peidr una lista a la base de datos
     categoriaGet:async(req, res)=>{
         const value = req.query.value;
@@ -21,17 +28,6 @@ const categoriasControllrs ={
         const {id}=req.params;
         //buscar y devolver como un objeto
         const categoria = await Categoria.findOne({_id:id})
-        res.json({categoria})
-    },
-    //objeto para guardar los datos en la base de datos
-    categoriaPost:async (req,res)=>{
-        //Recibe los datos que envia el cliente por el body
-        const {nombre, descripcion} = req.body;
-        //crea la categiria y los llena con los datos recibidos por el cliente
-        const categoria = Categoria({nombre, descripcion});
-        //guardar en la base de datos
-        await categoria.save();
-        //responder el usuario
         res.json({categoria})
     },
     //objeto para actualizar
