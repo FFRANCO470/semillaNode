@@ -1,11 +1,6 @@
 import Articulo from '../models/articulo.js'
 import Compra from '../models/compra.js';
 
-
-const existeCompraById = async (id) =>{
-    const existe = await Compra.findById(id)
-    if(!existe) throw new Error('No existe compra con ese ID')
-}
 //FACTURA, NOTA DEBITO,NOTA CREDITO
 const existeTipoComprobante = async (tipoComprobante) =>{
     if (tipoComprobante != "FACTURA")  {
@@ -16,7 +11,48 @@ const existeTipoComprobante = async (tipoComprobante) =>{
         }
     }
 }
-      
+
+const personaActiva = async (persona)=>{
+    const personaActiva = await Persona.findOne({_id:persona})
+    if (personaActiva.estado === 0) {throw new Error('Persona desactivada')}
+    if (personaActiva.tipoPersona !== "proveedor") {throw new Error('Solo proveedores')}
+}
+
+const tamanoSerie = (serieComprobante)=>{
+    if (serieComprobante.length > 7) {throw new Error('serieComprobante mayor a 7 caracteres')}
+}
+
+const tamanoNum = (numComprobante)=>{
+    if (numComprobante.length > 10) {throw new Error('numComprobante mayor a 10 caracteres')}
+}
+
+const tipoNumero = (variable) => {
+    if (typeof variable != "number") {throw new Error('impuesto / total tipo numero')}
+}
+
+const examinar = async (detalles)=>{
+
+}
+// var objectid = mongodb.ObjectID
+//         detalles.forEach(  async (element) => {
+//             if (!element._id) {return mensaje ='id de articulo obligatorio'}
+//             if (element._id === "") {return mensaje ='id de articulo obligatorio'}
+//             if (!objectid.isValid(element._id)) {return mensaje ='id de articulo invalido'}
+//             //const existeID = await Articulo.findOne({_id:element._id})
+//             //if(existeID==null){return mensaje ='Ariticulo no existe'}
+
+//             if (!element.articulo) {return mensaje ='nombre de articulo obligatorio'}
+//             if (element.articulo === "") {return mensaje ='nombre de articulo obligatorio'}            
+//             //if (element.articulo !== existeID.nombre) {return mensaje ='nombre de articulo obligatorio'}
+
+//             if (!element.cantidad) {return mensaje ='cantidad obligatorio'}
+//             if (element.cantidad === "") {return mensaje ='cantidad obligatorio'}
+//             if (typeof element.cantidad != "number" ) {return mensaje ='cantidad es numero'}
+
+//             if (!element.costo) {return mensaje ='costo obligatorio'}
+//             if (element.costo === "") {return mensaje ='costo obligatorio'}
+//             if (typeof element.costo != "number" ) {return mensaje ='costo es numero'}    
+//         })
 
 // const existeDetalle = (detalles)=>{
 //     var objectid = mongodb.ObjectID
@@ -49,6 +85,12 @@ const existeTipoComprobante = async (tipoComprobante) =>{
 
 
 
+
+const existeCompraById = async (id) =>{
+    const existe = await Compra.findById(id)
+    if(!existe) throw new Error('No existe compra con ese ID')
+}
+
 //recibir el id del articulo que va a modificar y la cantidad que va a sumar 
 const aumentarStock = async (_id,cantidad) =>{
     let {stock} = await Articulo.findById(_id);
@@ -62,4 +104,4 @@ const disminuirStock = async (_id,cantidad) =>{
     await Articulo.findByIdAndUpdate({_id},{stock})
 }
 
-export {existeCompraById, existeTipoComprobante, aumentarStock,disminuirStock}
+export {existeTipoComprobante, personaActiva, tamanoSerie, tamanoNum, tipoNumero, examinar, existeCompraById, aumentarStock, disminuirStock}
