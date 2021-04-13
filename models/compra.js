@@ -15,4 +15,4 @@ const CompraSchema = mongoose.Schema({
 
 export default mongoose.model('Compra',CompraSchema)
 
-//usuario (ob),persona(ob prove),tipoComprobante(ob),serieComprobante(ob),numComprobante(ob),impuesto(ob),total(ob),detalles(ob),
+//usuario, persona, tipoComprobante, serieComprobante, numComprobante, impuesto, total, detalles

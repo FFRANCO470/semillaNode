@@ -9,6 +9,33 @@ import { validarJWR } from '../middlewares/validarJwt.js';
 import { validarRol } from '../middlewares/validarRoles.js';
 const router = Router();
 
+//usuario, persona, tipoComprobante, serieComprobante(7), numComprobante(10), impuesto, total, detalles
+router.post('/',[
+    validarJWR,
+    validarRol("ALMACENISTA_ROL"),
+    check('usuario','Usuario obligatorio').not().isEmpty(),
+    check('usuario','ID no valido').isMongoId(),
+    check ('usuario').custom(existeUsuarioById),
+    check('persona','Persona obligatorio').not().isEmpty(),
+    check('persona','ID no valido').isMongoId(),
+    check ('persona').custom(existePersonaById),
+    check('tipoComprobante','tipoComprobante obligatorio').not().isEmpty(),
+    check ('tipoComprobante').custom(existeTipoComprobante),
+    check('serieComprobante','serieComprobante obligatorio').not().isEmpty(),
+    check('numComprobante','numComprobante obligatorio').not().isEmpty(),
+    check('impuesto','impuesto obligatorio').not().isEmpty(),
+    check('total','total obligatorio').not().isEmpty(),
+    check('detalles','detalles obligatorio').not().isEmpty(),
+
+    
+    
+    //check("detalles").custom(existeDetalle),
+    validarCampo
+],compraControllers.compraPost)
+
+
+
+
 router.get('/',[
     validarJWR,
     validarRol("ALMACENISTA_ROL","VENDEDOR_ROL"),
@@ -22,29 +49,7 @@ router.get('/:id',[
     check('id').custom(existeCompraById),
     validarCampo
 ],compraControllers.compraGetById)
-//usuario (ob),persona(ob prove),tipoComprobante(ob),serieComprobante(ob),numComprobante(ob),impuesto(ob),total(ob),detalles(ob),
-router.post('/',[
-    validarJWR,
-    validarRol("ALMACENISTA_ROL","VENDEDOR_ROL"),
-    check('usuario','Usuario obligatorio').not().isEmpty(),
-    check('usuario','ID no valido').isMongoId(),
-    check ('usuario').custom(existeUsuarioById),
 
-    check('persona','Persona obligatorio').not().isEmpty(),
-    check('persona','ID no valido').isMongoId(),
-    check ('persona').custom(existePersonaById),
-
-    check('tipoComprobante','tipoComprobante obligatorio').not().isEmpty(),
-    check ('tipoComprobante').custom(existeTipoComprobante),
-
-    check('serieComprobante','serieComprobante obligatorio').not().isEmpty(),
-    check('numComprobante','numComprobante obligatorio').not().isEmpty(),
-    check('impuesto','impuesto obligatorio').not().isEmpty(),
-    check('total','total obligatorio').not().isEmpty(),
-    check('detalles','detalles obligatorio').not().isEmpty(),
-    //check("detalles").custom(existeDetalle),
-    validarCampo
-],compraControllers.compraPost)
 
 
 router.put('/:id',compraControllers.compraPut)
