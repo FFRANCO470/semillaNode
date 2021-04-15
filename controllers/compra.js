@@ -17,13 +17,41 @@ const compraControllers = {
 
 
         var objectid = mongodb.ObjectID
-            
+        var mensaje = ""
+        detalles.map(async(element)=>{
 
+            if (element._id === undefined ) {return mensaje ='id de articulo obligatorio'}
+            if (element._id === "") {return mensaje ='id de articulo vacio'}
+            if (!objectid.isValid(element._id)) {return mensaje ='id de articulo invalido'}
+            const existeID = await Articulo.findOne({_id:element._id})
+            console.log(existeID);
+            if(existeID === 'null'){return mensaje ='Ariticulo no existe'}
 
-        const compra = Compra({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
-        detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
-        await compra.save();
-        res.json({compra})
+            if (element.articulo === undefined) {return mensaje ='nombre de articulo obligatorio'}
+            if (element.articulo === "") {return mensaje ='nombre de articulo vacio'}            
+            //if (element.articulo !== existeID.nombre) {return mensaje ='inconsistencai en el nombre'}
+
+            if (element.cantidad === undefined) {return mensaje ='cantidad obligatoria'}
+            if (element.cantidad === "") {return mensaje ='cantidad vacia'}
+            if (typeof element.cantidad != "number" ) {return mensaje ='cantidad es numero'}
+
+            if (element.costo === undefined) {return mensaje = "costo obligatorio"}
+            if (element.costo === "") {return mensaje = "costo vacio"}
+            if (typeof element.costo != "number" ) {return mensaje = "costo es tipo numero"}
+        })
+        console.log('mensaje');
+        console.log(mensaje);
+        console.log('mensaje');
+        if(mensaje !== ""){
+            return res.json({msg:mensaje})
+        }else{
+            const compra = Compra({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
+            detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
+            await compra.save();
+            res.json({compra})
+        }
+
+        
         
     },
 

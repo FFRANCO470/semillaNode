@@ -21,23 +21,9 @@ const personaActiva = async (persona)=>{
 
 // 
 //         detalles.forEach(  async (element) => {
-//             if (!element._id) {return mensaje ='id de articulo obligatorio'}
-//             if (element._id === "") {return mensaje ='id de articulo obligatorio'}
-//             if (!objectid.isValid(element._id)) {return mensaje ='id de articulo invalido'}
-//             //const existeID = await Articulo.findOne({_id:element._id})
-//             //if(existeID==null){return mensaje ='Ariticulo no existe'}
+            
 
-//             if (!element.articulo) {return mensaje ='nombre de articulo obligatorio'}
-//             if (element.articulo === "") {return mensaje ='nombre de articulo obligatorio'}            
-//             //if (element.articulo !== existeID.nombre) {return mensaje ='nombre de articulo obligatorio'}
-
-//             if (!element.cantidad) {return mensaje ='cantidad obligatorio'}
-//             if (element.cantidad === "") {return mensaje ='cantidad obligatorio'}
-//             if (typeof element.cantidad != "number" ) {return mensaje ='cantidad es numero'}
-
-//             if (!element.costo) {return mensaje ='costo obligatorio'}
-//             if (element.costo === "") {return mensaje ='costo obligatorio'}
-//             if (typeof element.costo != "number" ) {return mensaje ='costo es numero'}    
+                
 //         })
 
 // const existeDetalle = (detalles)=>{
