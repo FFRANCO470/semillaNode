@@ -10,6 +10,16 @@ const compraControllers = {
     compraPost : async (req,res) => {
         const {usuario, persona, tipoComprobante, serieComprobante, numComprobante, impuesto, total, detalles} = req.body;
         
+        if (serieComprobante.length > 7) {return res.status(400).json({msg:'serieComprobante mayor a 7 caracteres'})}
+        if (numComprobante.length > 10) {return res.status(400).json({msg:'numComprobante mayor a 10 caracteres'})}
+        if (typeof impuesto != "number")  {return res.status(400).json({msg:'impuesto es tipo numero'})}
+        if (typeof total != "number")  {return res.status(400).json({msg:'total es tipo numero'})}
+
+
+        var objectid = mongodb.ObjectID
+            
+
+
         const compra = Compra({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
         detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
         await compra.save();

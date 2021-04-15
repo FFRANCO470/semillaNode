@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { check } from 'express-validator';
 import compraControllers from '../controllers/compra.js';
-import { existeTipoComprobante, personaActiva, tamanoSerie, tamanoNum, tipoNumero, examinar, existeCompraById } from '../helpers/compra.js';
+import { existeTipoComprobante, personaActiva, existeCompraById } from '../helpers/compra.js';
 import { existeUsuarioById } from '../helpers/usuarios.js';
 import { existePersonaById } from '../helpers/persona.js';
 import { validarCampo } from '../middlewares/validarCampos.js';
@@ -14,11 +14,11 @@ router.post('/',[
     validarJWR,
     validarRol("ALMACENISTA_ROL"),
     check('usuario','Usuario obligatorio').not().isEmpty(),
-    check('usuario','ID no valido').isMongoId(),
+    check('usuario','ID de usuario no valido').isMongoId(),
     check ('usuario').custom(existeUsuarioById),
 
     check('persona','Persona obligatorio').not().isEmpty(),
-    check('persona','ID no valido').isMongoId(),
+    check('persona','ID de persona no valido').isMongoId(),
     check ('persona').custom(existePersonaById),
     check('persona').custom(personaActiva),
 
@@ -26,20 +26,14 @@ router.post('/',[
     check ('tipoComprobante').custom(existeTipoComprobante),
 
     check('serieComprobante','serieComprobante obligatorio').not().isEmpty(),
-    check('serieComprobante').custom(tamanoSerie),
 
     check('numComprobante','numComprobante obligatorio').not().isEmpty(),
-    check('numComprobante').custom(tamanoNum),
 
     check('impuesto','impuesto obligatorio').not().isEmpty(),
-    check('numComprobante').custom(tipoNumero),
 
     check('total','total obligatorio').not().isEmpty(),
-    check('numComprobante').custom(tipoNumero),
-
 
     check('detalles','detalles obligatorio').not().isEmpty(),
-    check('detalles').custom(examinar),
     
     validarCampo
 ],compraControllers.compraPost)

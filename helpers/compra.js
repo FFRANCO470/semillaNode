@@ -1,5 +1,6 @@
 import Articulo from '../models/articulo.js'
 import Compra from '../models/compra.js';
+import Persona from '../models/persona.js'
 
 //FACTURA, NOTA DEBITO,NOTA CREDITO
 const existeTipoComprobante = async (tipoComprobante) =>{
@@ -18,22 +19,7 @@ const personaActiva = async (persona)=>{
     if (personaActiva.tipoPersona !== "proveedor") {throw new Error('Solo proveedores')}
 }
 
-const tamanoSerie = (serieComprobante)=>{
-    if (serieComprobante.length > 7) {throw new Error('serieComprobante mayor a 7 caracteres')}
-}
-
-const tamanoNum = (numComprobante)=>{
-    if (numComprobante.length > 10) {throw new Error('numComprobante mayor a 10 caracteres')}
-}
-
-const tipoNumero = (variable) => {
-    if (typeof variable != "number") {throw new Error('impuesto / total tipo numero')}
-}
-
-const examinar = async (detalles)=>{
-
-}
-// var objectid = mongodb.ObjectID
+// 
 //         detalles.forEach(  async (element) => {
 //             if (!element._id) {return mensaje ='id de articulo obligatorio'}
 //             if (element._id === "") {return mensaje ='id de articulo obligatorio'}
@@ -104,4 +90,4 @@ const disminuirStock = async (_id,cantidad) =>{
     await Articulo.findByIdAndUpdate({_id},{stock})
 }
 
-export {existeTipoComprobante, personaActiva, tamanoSerie, tamanoNum, tipoNumero, examinar, existeCompraById, aumentarStock, disminuirStock}
+export {existeTipoComprobante, personaActiva, existeCompraById, aumentarStock, disminuirStock}
