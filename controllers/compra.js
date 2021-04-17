@@ -1,8 +1,6 @@
 import mongodb from 'mongodb'
 import Compra from '../models/compra.js'
-import Persona from '../models/persona.js'
 import { aumentarStock , disminuirStock} from '../helpers/compra.js';
-import { existeArticuloByIdlista} from '../helpers/articulo.js';
 import Articulo from '../models/articulo.js';
 import async from 'async'
 

@@ -19,44 +19,6 @@ const personaActiva = async (persona)=>{
     if (personaActiva.tipoPersona !== "proveedor") {throw new Error('Solo proveedores')}
 }
 
-// 
-//         detalles.forEach(  async (element) => {
-            
-
-                
-//         })
-
-// const existeDetalle = (detalles)=>{
-//     var objectid = mongodb.ObjectID
-//     detalles.foreach( (articulo)=>{
-//         if (!articulo._id) {throw new Error('id obligatorio')}
-//         if (!objectid.isValid(articulo._id)) {throw new Error('no es un id')}
-
-//         if (!articulo.articulo) {throw new Error('articulo obligatorio')}
-//         if (!articulo.cantidad) {throw new Error('cantidad obligatorio')}
-//         if (typeof element.cantidad != "number"  ) {throw new Error('cantidad numero')}
-//         if (!articulo.costo) {throw new Error('costo obligatorio')}
-//         if (typeof element.costo != "number") {throw new Error('costo numero')}
-//     })
-// }
-
-
-
-//if (resto.categoria) {
-            //validar que se un id
-        //    var objectid = mongodb.ObjectID;
-        //    if (!objectid.isValid(resto.categoria)) {return res.json({msg:'ID de categoria no valido'})}
-            //verificar que exista categoria con ese id
-        //    const existenciaCategoria = await Categoria.findOne({_id:resto.categoria})
-        //    if (!existenciaCategoria) {return res.json({msg:'ID sin categoria'})}
-        //}
-
-
-
-
-
-
-
 
 const existeCompraById = async (id) =>{
     const existe = await Compra.findById(id)
