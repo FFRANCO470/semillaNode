@@ -4,6 +4,7 @@ import Persona from '../models/persona.js'
 import { aumentarStock , disminuirStock} from '../helpers/compra.js';
 import { existeArticuloByIdlista} from '../helpers/articulo.js';
 import Articulo from '../models/articulo.js';
+import async from 'async'
 
 //usuario, persona, tipoComprobante, serieComprobante(7), numComprobante(10), impuesto, total, detalles
 const compraControllers = {
@@ -18,18 +19,19 @@ const compraControllers = {
 
         var objectid = mongodb.ObjectID
         var mensaje = ""
-        detalles.map(async(element)=>{
-
+        async.map(detalles, async (element, callback_detalle) => {
+            console.log('entramos aui si ono ?????')
             if (element._id === undefined ) {return mensaje ='id de articulo obligatorio'}
             if (element._id === "") {return mensaje ='id de articulo vacio'}
             if (!objectid.isValid(element._id)) {return mensaje ='id de articulo invalido'}
+            
+            console.log('elemento line 27',element);
             const existeID = await Articulo.findOne({_id:element._id})
-            console.log(existeID);
-            if(existeID === 'null'){return mensaje ='Ariticulo no existe'}
+            console.log('Existe o no el mk articulo????', existeID);
+            if(!existeID){return mensaje ='Ariticulo no existe'}
 
             if (element.articulo === undefined) {return mensaje ='nombre de articulo obligatorio'}
             if (element.articulo === "") {return mensaje ='nombre de articulo vacio'}            
-            //if (element.articulo !== existeID.nombre) {return mensaje ='inconsistencai en el nombre'}
 
             if (element.cantidad === undefined) {return mensaje ='cantidad obligatoria'}
             if (element.cantidad === "") {return mensaje ='cantidad vacia'}
@@ -38,20 +40,46 @@ const compraControllers = {
             if (element.costo === undefined) {return mensaje = "costo obligatorio"}
             if (element.costo === "") {return mensaje = "costo vacio"}
             if (typeof element.costo != "number" ) {return mensaje = "costo es tipo numero"}
-        })
-        console.log('mensaje');
-        console.log(mensaje);
-        console.log('mensaje');
-        if(mensaje !== ""){
-            return res.json({msg:mensaje})
-        }else{
-            const compra = Compra({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
-            detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
-            await compra.save();
-            res.json({compra})
-        }
+            
+            callback_detalle(false, element)
 
-        
+        }, (err, results) => {
+
+            console.log('mensaje');
+            console.log(mensaje);
+            if(mensaje !== ""){
+                return res.json({msg:mensaje})
+            }else{
+                const compra = Compra({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
+                detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
+                compra.save((err, doc, num)=> {
+                    res.json({doc})
+                });
+            }
+        })
+
+        /* detalles.map(async(element)=>{
+
+            if (element._id === undefined ) {return mensaje ='id de articulo obligatorio'}
+            if (element._id === "") {return mensaje ='id de articulo vacio'}
+            if (!objectid.isValid(element._id)) {return mensaje ='id de articulo invalido'}
+            
+            console.log('elemento line 27',element);
+            const existeID = await Articulo.findOne({_id:element._id})
+            console.log(existeID);
+            if(!existeID){return mensaje ='Ariticulo no existe'}
+
+            if (element.articulo === undefined) {return mensaje ='nombre de articulo obligatorio'}
+            if (element.articulo === "") {return mensaje ='nombre de articulo vacio'}            
+          
+            if (element.cantidad === undefined) {return mensaje ='cantidad obligatoria'}
+            if (element.cantidad === "") {return mensaje ='cantidad vacia'}
+            if (typeof element.cantidad != "number" ) {return mensaje ='cantidad es numero'}
+
+            if (element.costo === undefined) {return mensaje = "costo obligatorio"}
+            if (element.costo === "") {return mensaje = "costo vacio"}
+            if (typeof element.costo != "number" ) {return mensaje = "costo es tipo numero"}
+        }) */
         
     },
 
