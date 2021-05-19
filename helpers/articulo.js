@@ -23,4 +23,10 @@ const existeArticuloByIdlista = async (element)=>{
     }
 }
 
-export {existeArticuloById, existeArticuloByIdlista, existeArticuloByNombre, existeArticuloByCodigo}
+const existeArticuloByIdBool = async (id) =>{
+    const existe = await Articulo.findById(id)
+    if(existe) return true 
+    else return false
+}
+
+export {existeArticuloById, existeArticuloByIdlista, existeArticuloByNombre, existeArticuloByCodigo,existeArticuloByIdBool}
