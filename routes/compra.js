@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { check } from 'express-validator';
 import compraControllers from '../controllers/compra.js';
-import { existeTipoComprobante, personaActiva, existeCompraById,validarArticuloDetalle,tamanoSerie,tamanoNum,typeImpuesto } from '../helpers/compra.js';
+import { existeTipoComprobante, personaActiva, existeCompraById,validarArticuloDetalle } from '../helpers/compra.js';
 import { existeUsuarioById } from '../helpers/usuarios.js';
 import { existePersonaById } from '../helpers/persona.js';
 import { validarCampo } from '../middlewares/validarCampos.js';
@@ -23,9 +23,7 @@ router.post('/',[
     check('tipoComprobante','tipoComprobante obligatorio').not().isEmpty(),
     check ('tipoComprobante').custom(existeTipoComprobante),
     check('serieComprobante','serieComprobante obligatorio').not().isEmpty(),
-    check('serieComprobante').custom(tamanoSerie),
     check('numComprobante','numComprobante obligatorio').not().isEmpty(),
-    check('numComprobante').custom(tamanoNum),
     check('impuesto','impuesto obligatorio').not().isEmpty(),
     check('total','total obligatorio').not().isEmpty(),
     check('detalles','detalles obligatorio').not().isEmpty(),
@@ -55,6 +53,12 @@ router.put('/activar/:id',[
     validarCampo
 ],compraControllers.compraPutActivar)
 
-router.put('/desactivar/:id',compraControllers.compraPutDesactivar)
+router.put('/desactivar/:id',[
+    validarJWR,
+    validarRol("ALMACENISTA_ROL"),
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existeCompraById),
+    validarCampo
+],compraControllers.compraPutDesactivar)
 
 export default router

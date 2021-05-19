@@ -52,14 +52,7 @@ const validarArticuloDetalle=async(detalles)=>{
 
 }
 
-const tamanoSerie =(serieComprobante)=>{
-    if (serieComprobante.length > 7) throw new Error ('Serie de comprobante mayor a 7 caracteres')
-}
-
-const tamanoNum=(numComprobante)=>{
-    if (numComprobante.length > 10) throw new Error ('Serie de comprobante mayor a 7 caracteres')
-}
 
 
 
-export {existeTipoComprobante, personaActiva, existeCompraById, aumentarStock, disminuirStock,validarArticuloDetalle,tamanoSerie,tamanoNum}
+export {existeTipoComprobante, personaActiva, existeCompraById, aumentarStock, disminuirStock,validarArticuloDetalle}

@@ -6,8 +6,8 @@ import { aumentarStock , disminuirStock} from '../helpers/compra.js';
 const compraControllers = {
     compraPost : async (req,res) => {
         const {usuario, persona, tipoComprobante, serieComprobante, numComprobante, impuesto, total, detalles} = req.body;
-        //if (serieComprobante.length > 7) {return res.status(400).json({msg:'serieComprobante mayor a 7 caracteres'})}
-        //if (numComprobante.length > 10) {return res.status(400).json({msg:'numComprobante mayor a 10 caracteres'})}
+        if (serieComprobante.length > 7) {return res.status(400).json({msg:'serieComprobante mayor a 7 caracteres'})}
+        if (numComprobante.length > 10) {return res.status(400).json({msg:'numComprobante mayor a 10 caracteres'})}
         if (typeof impuesto != "number")  {return res.status(400).json({msg:'impuesto es tipo numero'})}
         if (typeof total != "number")  {return res.status(400).json({msg:'total es tipo numero'})}
         const compra = Compra({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
@@ -37,17 +37,25 @@ const compraControllers = {
     },
     compraPutActivar : async ( req,res) =>{
         const {id} = req.params;
-        const compra = await Compra.findByIdAndUpdate(id,{estado:1})
         const compraActiva = await Compra.findOne({_id:id})
-        compraActiva.detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
-        res.json({compra})
+        if(compraActiva.estado==1){
+            return res.status(400).json({msg:'Compra ya activa'})
+        }
+            const compra = await Compra.findByIdAndUpdate(id,{estado:1})
+            compraActiva.detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
+            res.json({compra})
+          
     },
     compraPutDesactivar : async ( req , res )=>{
         const {id} = req.params;
-        const compra = await Compra.findByIdAndUpdate(id,{estado:0})
-        const compraActiva = await Compra.findOne({_id:id})
-        compraDesactiva.detalles.map((articulo)=>disminuirStock(articulo._id,articulo.cantidad))
-        res.json({compra})
+        const compraDesactiva = await Compra.findOne({_id:id})
+        if(compraDesactiva.estado==0){
+            return res.status(400).json({msg:'Compra ya desactiva'})
+        }
+            const compra = await Compra.findByIdAndUpdate(id,{estado:0})
+            compraDesactiva.detalles.map((articulo)=>disminuirStock(articulo._id,articulo.cantidad))
+            res.json({compra})
+          
     }
 }
 export default compraControllers
