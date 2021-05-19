@@ -1,7 +1,19 @@
-import { ventaStock } from '../helpers/venta.js';
+import { devolucionVentaStock, ventaStock } from '../helpers/venta.js';
 import Venta from '../models/venta.js'
 
 const ventaControllers = {
+    ventaPost : async(req,res)=>{
+        const {usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles} = req.body;
+        if (serieComprobante.length > 7) {return res.status(400).json({msg:'serieComprobante mayor a 7 caracteres'})}
+        if (numComprobante.length > 10) {return res.status(400).json({msg:'numComprobante mayor a 10 caracteres'})}
+        if (typeof impuesto != "number")  {return res.status(400).json({msg:'impuesto es tipo numero'})}
+        if (typeof total != "number")  {return res.status(400).json({msg:'total es tipo numero'})}
+        
+        const venta = Venta({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
+        detalles.map((articulo)=>ventaStock(articulo._id,articulo.cantidad))
+        await venta.save();
+        res.json({venta})
+    },
     ventaGet : async(req,res)=>{
         const value = req.query.value;
         const venta = await Venta
@@ -19,19 +31,29 @@ const ventaControllers = {
     },
     ventaGetById : async(req,res)=>{
         const {id}=req.params;
-        const venta = await Venta.findOne({_id:id})
+        const venta = await Venta.findOne({_id:id}).populate('usuario','nombre').populate('persona','nombre');
+        res.json({venta})
+    },    
+    ventaPutActivar : async(req,res)=>{
+        const {id} = req.params;
+        const ventaActiva = await Venta.findOne({_id:id})
+        if(ventaActiva.estado==1){
+            return res.status(400).json({msg:'Venta ya activa'})
+        }
+        const venta = await Venta.findByIdAndUpdate(id,{estado:1})
+        ventaActiva.detalles.map((articulo)=>ventaStock(articulo._id,articulo.cantidad))
         res.json({venta})
     },
-    ventaPost : async(req,res)=>{
-        const {usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles} = req.body;
-        const venta = Venta({usuario,persona,tipoComprobante,serieComprobante,numComprobante,impuesto,total,detalles});
-        detalles.map((articulo)=>ventaStock(articulo._id,articulo.cantidad))
-        await venta.save();
+    ventaPutDesactivar : async(req,res)=>{
+        const {id} = req.params;
+        const ventaDesactivada = await Venta.findOne({_id:id})
+        if(ventaDesactivada.estado==0){
+            return res.status(400).json({msg:'Venta ya desactivada'})
+        }
+        const venta = await Venta.findByIdAndUpdate(id,{estado:0})
+        ventaDesactivada.detalles.map((articulo)=>devolucionVentaStock(articulo._id,articulo.cantidad))
         res.json({venta})
     },
-    ventaPut : async(req,res)=>{},
-    ventaPutActivar : async(req,res)=>{},
-    ventaPutDesactivar : async(req,res)=>{},
 
 }
 

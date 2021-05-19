@@ -22,7 +22,6 @@ const existeArticuloByIdlista = async (element)=>{
         return existe
     }
 }
-
 const existeArticuloByIdBool = async (id) =>{
     const existe = await Articulo.findById(id)
     if(existe) return true 

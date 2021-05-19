@@ -1,8 +1,6 @@
 import Compra from '../models/compra.js'
 import { aumentarStock , disminuirStock} from '../helpers/compra.js';
-
 //usuario, persona, tipoComprobante, serieComprobante(7), numComprobante(10), impuesto, total, detalles
-
 const compraControllers = {
     compraPost : async (req,res) => {
         const {usuario, persona, tipoComprobante, serieComprobante, numComprobante, impuesto, total, detalles} = req.body;
@@ -41,9 +39,9 @@ const compraControllers = {
         if(compraActiva.estado==1){
             return res.status(400).json({msg:'Compra ya activa'})
         }
-            const compra = await Compra.findByIdAndUpdate(id,{estado:1})
-            compraActiva.detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
-            res.json({compra})
+        const compra = await Compra.findByIdAndUpdate(id,{estado:1})
+        compraActiva.detalles.map((articulo)=>aumentarStock(articulo._id,articulo.cantidad))
+        res.json({compra})
           
     },
     compraPutDesactivar : async ( req , res )=>{
@@ -52,9 +50,9 @@ const compraControllers = {
         if(compraDesactiva.estado==0){
             return res.status(400).json({msg:'Compra ya desactiva'})
         }
-            const compra = await Compra.findByIdAndUpdate(id,{estado:0})
-            compraDesactiva.detalles.map((articulo)=>disminuirStock(articulo._id,articulo.cantidad))
-            res.json({compra})
+        const compra = await Compra.findByIdAndUpdate(id,{estado:0})
+        compraDesactiva.detalles.map((articulo)=>disminuirStock(articulo._id,articulo.cantidad))
+        res.json({compra})
           
     }
 }

@@ -8,7 +8,6 @@ import { validarCampo } from '../middlewares/validarCampos.js';
 import { validarJWR } from '../middlewares/validarJwt.js';
 import { validarRol } from '../middlewares/validarRoles.js';
 const router = Router();
-
 //usuario, persona, tipoComprobante, serieComprobante(7), numComprobante(10), impuesto, total, detalles
 router.post('/',[
     validarJWR,
@@ -30,13 +29,11 @@ router.post('/',[
     check('detalles').custom(validarArticuloDetalle),
     validarCampo
 ],compraControllers.compraPost)
-
 router.get('/',[
     validarJWR,
     validarRol("ALMACENISTA_ROL"),
     validarCampo
 ],compraControllers.compraGet)
-
 router.get('/:id',[
     validarJWR,
     validarRol("ALMACENISTA_ROL"),
