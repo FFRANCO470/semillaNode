@@ -10,7 +10,8 @@ import venta from '../routes/venta.js'
 class Server{
     constructor(){
         //crear variable con el puerto
-        this.port = process.env.PORT
+        //this.port = process.env.PORT
+        this.port = 8080
         //crear servidor
         this.app = express();
         //conectar a base de datos
