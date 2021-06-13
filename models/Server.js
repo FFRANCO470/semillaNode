@@ -36,7 +36,7 @@ class Server{
         //leer archivos js
         this.app.use(express.json());
         //valirdar origen de peticion
-        this.app.use(cors());  
+        //this.app.use(cors());  
         //para mostrar el front end
         this.app.use(express.static('public'))
     }
