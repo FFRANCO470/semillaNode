@@ -3,7 +3,9 @@ import mongoose from 'mongoose'
 const dbConnection=async()=>{
     try { 
         //MONGO_LOCAL
-        await mongoose.connect(process.env.MONGOOSE_CNX, {
+        //await mongoose.connect(process.env.MONGOOSE_CNX, {
+        await mongoose.connect("mongodb+srv://admi:matanga@adsi.dy05j.mongodb.net/dbsistema", {
+        //await mongoose.connect(process.env.MONGO_LOCAL, {
             useNewUrlParser: true, 
             useUnifiedTopology: true,
             useCreateIndex:true,
