@@ -1,5 +1,5 @@
 import express from 'express'
-//import cors from 'cors'
+import cors from 'cors'
 import dbConnection from '../database/config.js';
 import categoria from '../routes/categoria.js';
 import usuario from '../routes/usuario.js'
@@ -10,8 +10,8 @@ import venta from '../routes/venta.js'
 class Server{
     constructor(){
         //crear variable con el puerto
-        //this.port = process.env.PORT
-        this.port = 8080
+        this.port = process.env.PORT
+        //this.port = 8080
         //crear servidor
         this.app = express();
         //conectar a base de datos
@@ -37,7 +37,7 @@ class Server{
         //leer archivos js
         this.app.use(express.json());
         //valirdar origen de peticion
-        //this.app.use(cors());  
+        this.app.use(cors());  
         //para mostrar el front end
         this.app.use(express.static('public'))
     }
