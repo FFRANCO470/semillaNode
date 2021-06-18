@@ -4,6 +4,7 @@ import Categoria from '../models/categoria.js';
 const articulosControllers={
     articuloPost : async (req,res)=>{
         const {categoria,codigo,nombre,descripcion,precio,costo,stock} = req.body
+
         const categoriaActiva = await Categoria.findOne({_id:categoria})
         if (categoriaActiva.estado === 0) {return res.status(400).json({msg:'Categoria desactivado'})}
         if(codigo.length>64){return res.status(400).json({msg:'Codigo mayor 64 caracteres'})}
@@ -11,19 +12,46 @@ const articulosControllers={
         if (descripcion) {
             if(descripcion.length>255){return res.status(400).json({msg:'Descripcion mayor 255 caracteres'})}
         }
+
+        var pres = 0
+
         if (precio) {
-            if (typeof precio != "number") {return res.status(400).json({msg:'Precio tipo numero'})}
-            if (precio < 0) {return res.status(400).json({msg:'Precio negativo'})}
+            //console.log(precio,'leter');
+            //precio = Number(precio)
+            //console.log(precio);
+            //console.log(Number(precio),'number');
+            //if (typeof precio != "number") {return res.status(400).json({msg:'Precio tipo numero'})}
+            if (typeof Number(precio) !== "number") {return res.status(400).json({msg:'Precio tipo numero'})}
+            if (Number.isNaN(precio)) {return res.status(400).json({msg:'Precio tipo numero con letras'})}
+            //if (precio < 0) {return res.status(400).json({msg:'Precio negativo'})}
+            pres = Number(precio);
+            if (pres <= 0) {return res.status(400).json({msg:'Precio negativo'})}
         }
+
+
+        var cost = 0
         if (costo) {
-            if (typeof costo != "number") {return res.status(400).json({msg:'Costo tipo numero'})}
-            if (costo < 0) {return res.status(400).json({msg:'Costo negativo'})}
+            //if (typeof costo != "number") {return res.status(400).json({msg:'Costo tipo numero'})}
+            //if (costo < 0) {return res.status(400).json({msg:'Costo negativo'})}
+            if (typeof Number(costo) !== "number") {return res.status(400).json({msg:'Costo tipo numero'})}
+            if (Number.isNaN(costo)) {return res.status(400).json({msg:'Costo tipo numero con letras'})}
+            cost = Number(costo);
+            if (cost <= 0) {return res.status(400).json({msg:'Costo negativo'})}
         }
+
+        var cant = 0
         if (stock) {
-            if (typeof stock != "number") {return res.status(400).json({msg:'Stock tipo numero'})}
-            if (stock < 0) {return res.status(400).json({msg:'Stock negativo'})}
+            //if (typeof stock != "number") {return res.status(400).json({msg:'Stock tipo numero'})}
+            //if (stock < 0) {return res.status(400).json({msg:'Stock negativo'})}
+            if (typeof Number(stock) !== "number") {return res.status(400).json({msg:'Stock tipo numero'})}
+            if ( Number.isNaN(stock)) {return res.status(400).json({msg:'Stock tipo numero con letras'})}
+            cant = Number(stock);
+            if (cant <= 0) {return res.status(400).json({msg:'Stock negativo'})}
         }
-        const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio,costo,stock})
+
+        //const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio,costo,stock}) 
+        //const pres = Number(precio)
+        const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio:pres,costo:cost,stock:cant})
         await articulo.save()
         res.json({articulo})
     },
