@@ -16,41 +16,29 @@ const articulosControllers={
         var pres = 0
 
         if (precio) {
-            //console.log(precio,'leter');
-            //precio = Number(precio)
-            //console.log(precio);
-            //console.log(Number(precio),'number');
-            //if (typeof precio != "number") {return res.status(400).json({msg:'Precio tipo numero'})}
             if (typeof Number(precio) !== "number") {return res.status(400).json({msg:'Precio tipo numero'})}
             if (Number.isNaN(precio)) {return res.status(400).json({msg:'Precio tipo numero con letras'})}
-            //if (precio < 0) {return res.status(400).json({msg:'Precio negativo'})}
             pres = Number(precio);
-            if (pres <= 0) {return res.status(400).json({msg:'Precio negativo'})}
+            if (pres < 0) {return res.status(400).json({msg:'Precio negativo'})}
         }
 
 
         var cost = 0
         if (costo) {
-            //if (typeof costo != "number") {return res.status(400).json({msg:'Costo tipo numero'})}
-            //if (costo < 0) {return res.status(400).json({msg:'Costo negativo'})}
             if (typeof Number(costo) !== "number") {return res.status(400).json({msg:'Costo tipo numero'})}
             if (Number.isNaN(costo)) {return res.status(400).json({msg:'Costo tipo numero con letras'})}
             cost = Number(costo);
-            if (cost <= 0) {return res.status(400).json({msg:'Costo negativo'})}
+            if (cost < 0) {return res.status(400).json({msg:'Costo negativo'})}
         }
 
         var cant = 0
         if (stock) {
-            //if (typeof stock != "number") {return res.status(400).json({msg:'Stock tipo numero'})}
-            //if (stock < 0) {return res.status(400).json({msg:'Stock negativo'})}
             if (typeof Number(stock) !== "number") {return res.status(400).json({msg:'Stock tipo numero'})}
             if ( Number.isNaN(stock)) {return res.status(400).json({msg:'Stock tipo numero con letras'})}
             cant = Number(stock);
-            if (cant <= 0) {return res.status(400).json({msg:'Stock negativo'})}
+            if (cant = 0) {return res.status(400).json({msg:'Stock negativo'})}
         }
 
-        //const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio,costo,stock}) 
-        //const pres = Number(precio)
         const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio:pres,costo:cost,stock:cant})
         await articulo.save()
         res.json({articulo})
