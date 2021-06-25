@@ -7,7 +7,7 @@ const ventaControllers = {
         if (serieComprobante.length > 7) {return res.status(400).json({msg:'serieComprobante mayor a 7 caracteres'})}
         if (numComprobante.length > 10) {return res.status(400).json({msg:'numComprobante mayor a 10 caracteres'})}
         
-
+ 
         if (typeof Number(impuesto) !== "number") {return res.status(400).json({msg:'Impuesto tipo numero'})}
         if (Number.isNaN(impuesto)) {return res.status(400).json({msg:'Impuesto tipo numero con letras'})}
         if (Number(impuesto) < 0) {return res.status(400).json({msg:'Precio negativo'})}
