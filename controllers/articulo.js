@@ -33,15 +33,11 @@ const articulosControllers={
 
         var cant = 0
         if (stock) {
-            console.log('entramos a stock',stock);
             if (typeof Number(stock) !== "number") {return res.status(400).json({msg:'Stock tipo numero'})}
             if ( Number.isNaN(stock)) {return res.status(400).json({msg:'Stock tipo numero con letras'})}
             cant = Number(stock);
-            console.log('asiganamos cant',cant);
             if (cant == 0) {return res.status(400).json({msg:'Stock negativo'})}
         }
-        console.log(cant);
-        console.log(stock);
 
         const articulo = new Articulo({categoria,codigo,nombre,descripcion,precio:pres,costo:cost,stock:cant})
         await articulo.save()
