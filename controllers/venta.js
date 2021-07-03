@@ -36,7 +36,7 @@ const ventaControllers = {
             })
             .sort({'createAt':1})
             .populate('usuario','nombre')
-            .populate('persona','tipoPersona');
+            .populate('persona','nombre');
         res.json({venta})
     },
     ventaGetById : async(req,res)=>{
