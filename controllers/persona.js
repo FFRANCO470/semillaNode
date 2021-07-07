@@ -41,8 +41,8 @@ const personasControllers = {
     },
     personaGetById : async (req,res)=>{
         const {id}=req.params;
-        const articulo = await Persona.findOne({_id:id})
-        res.json({articulo})
+        const persona = await Persona.findOne({_id:id})
+        res.json({persona})
     },
     personaGetListCliente : async (req,res)=>{
         const value = req.query.value;

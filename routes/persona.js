@@ -23,13 +23,13 @@ router.post('/',[
 //validarRol("ALMACENISTA_ROL","VENDEDOR_ROL")
 router.get('/',[
     validarJWR,
-    validarRol(),
+    validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
     validarCampo
 ],personasControllers.personaGet)
 
 router.get('/byid/:id',[
     validarJWR,
-    validarRol(),
+    validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existePersonaById),
     validarCampo
