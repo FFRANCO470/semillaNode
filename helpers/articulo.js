@@ -28,4 +28,29 @@ const existeArticuloByIdBool = async (id) =>{
     else return false
 }
 
-export {existeArticuloById, existeArticuloByIdlista, existeArticuloByNombre, existeArticuloByCodigo,existeArticuloByIdBool}
+const rectificandoNombre = async (nombre,id)=>{
+    console.log('entre a validar eso');
+    const existe = await Articulo.findOne({nombre:nombre});
+    if (existe){
+        if(existe._id==id){
+            return true
+        }else{
+            return false
+        }
+    }else{
+        return true
+    }
+}
+const rectificandoCodigo = async (codigo,id)=>{
+    const existe = await Articulo.findOne({codigo:codigo});
+    if (existe){
+        if(existe._id==id){
+            return true
+        }else{
+            return false
+        }
+    }else{
+        return true
+    }
+}
+export {existeArticuloById, existeArticuloByIdlista, existeArticuloByNombre, existeArticuloByCodigo,existeArticuloByIdBool,rectificandoNombre,rectificandoCodigo}

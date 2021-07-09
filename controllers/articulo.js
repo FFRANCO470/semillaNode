@@ -1,10 +1,11 @@
 import Articulo from '../models/articulo.js';
 import mongodb from 'mongodb'
 import Categoria from '../models/categoria.js';
+import { rectificandoNombre,rectificandoCodigo } from '../helpers/articulo.js';
 const articulosControllers={
     articuloPost : async (req,res)=>{
         const {categoria,codigo,nombre,descripcion,precio,costo,stock} = req.body
-
+        
         const categoriaActiva = await Categoria.findOne({_id:categoria})
         if (categoriaActiva.estado === 0) {return res.status(400).json({msg:'Categoria desactivado'})}
         if(codigo.length>64){return res.status(400).json({msg:'Codigo mayor 64 caracteres'})}
@@ -65,20 +66,31 @@ const articulosControllers={
         const articulos = await Articulo.find({categoria:id})   //.findOne({_id:id})
         res.json({articulos})
     },
-    articuloPut : async (req,res)=>{
+    articuloPut : async (req,res)=>{//categoria,codigo,nombre,descripcion,precio,costo,stock
         const {id} = req.params
         const {_id,estado,createAt,__v,...resto} = req.body
 
         const user = await Articulo.findOne({_id:id})
         if (user.estado === 0) {return res.status(400).json({msg:'Articulo desactivado'})}
 
-        if(resto.nombre == "") {return res.status(400).json({msg:'Nombre vacio'})}
-        if (resto.nombre) {
-            if (resto.nombre.length > 50) {return res.status(400).json({msg:'Nombre mayor 50 caracteres'})}
-        }
 
-        if(resto.codigo == "") {return res.status(400).json({msg:'Codigo vacio'})}
+        if(resto.nombre == "") {return res.status(400).json({msg:'Nombre vacio (nada)'})}
+        if (resto.nombre) {
+            var name = resto.nombre.trim();
+            if(name.length == 0) {return res.status(400).json({msg:'Nombre vacio'})}
+            var validar = await rectificandoNombre(resto.nombre,id);
+            if(validar==false){return res.status(400).json({msg:'Nombre ya existente'})}
+            if (name.length > 50) {return res.status(400).json({msg:'Nombre mayor 50 caracteres'})}
+        }
+       
+        
+
+        if(resto.codigo === "") {return res.status(400).json({msg:'Codigo vacio (nada)'})}
         if (resto.codigo) {
+            var code = resto.codigo.trim();
+            if(code.length==0){return res.status(400).json({msg:'codigo vacio'})}
+            var validar = await rectificandoCodigo(resto.codigo,id);
+            if(validar==false){return res.status(400).json({msg:'codigo ya existente'})}
             if (resto.codigo.length > 64) {return res.status(400).json({msg:'Codigo mayor 64 caracteres'})}
         }
 

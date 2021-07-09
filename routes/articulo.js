@@ -49,8 +49,6 @@ router.put('/:id',[
     validarRol('ALMACENISTA_ROL'),
     check('id','ID no valido').isMongoId(),
     check('id').custom(existeArticuloById),
-    check('codigo').custom(existeArticuloByCodigo),
-    check('nombre').custom(existeArticuloByNombre),
     validarCampo
 ],articulosControllers.articuloPut)
 
