@@ -1,4 +1,13 @@
-import Persona from '../models/persona.js'
+import { subirArchivo } from '../helpers/subirArchivo.js';
+import Persona from '../models/persona.js';
+import path from 'path'
+import url from 'url'
+//manejar archivos dentro el servidor
+import * as fs from 'fs'
+//servicio de terceros 
+import cloudinary from 'cloudinary'
+
+cloudinary.config(process.env.CLOUDINARY_URL)
 
 
 //tipoPersona(obliga), nombre(obliga)(unico) 50, email(unico obliga) 50, tipoDocumento 20, numDocumento 20, direccion 70, telefono 15, 
@@ -138,6 +147,95 @@ const personasControllers = {
         const {id} = req.params;
         const persona = await Persona.findByIdAndUpdate(id,{estado:0});
         res.json({persona})
-    }
+    },
+    //cargar imagen
+    cargarArhivo : async(req,res)=>{
+        const {id}=req.params;
+        //como la imagen esta propensa a errores como el formato u otra cosa se coloca en try
+        try {
+            //subir la foto envia archivo y recibe nombre archivo
+            const nombre = await subirArchivo(req.files,undefined)
+            //persona a la que pertenece la foto
+            let persona = await Persona.findOne({_id:id})
+            //saber si tiene foto la persona
+            if(persona.foto){
+                //para saber donde esta la foto y borrarla
+                const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+                //para saber lo que voy a borrar
+                const pathImage = path.join(__dirname,'../uploads/',persona.foto);
+                //saber si existe el archivo
+                if(fs.existsSync(pathImage)){
+                    //unlinksync es promesa el otro no pero hacen lo mismo
+                    //eliminar
+                    fs.unlinkSync(pathImage)
+                }
+            }
+            persona = await Persona.findByIdAndUpdate(id,{foto:nombre})
+            //responder
+            res.json({nombre})
+        } catch (error) {
+            res.status(400).json({error})
+        }
+    },
+
+    traerImagenes:async(req,res)=>{
+        const {id} = req.params;
+        try {
+            let persona = await Persona.findOne({_id:id});
+            //si existe el campo foto
+            if(persona.foto){
+                //para saber la ubicacion de la aplicacion
+                const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+                //para saber la ubicacion de la foto
+                const pathImage = path.join(__dirname,'../uploads/',persona.foto);
+                //si existe la foto en el servidor retornala
+                if(fs.existsSync(pathImage)){
+                    return res.sendFile(pathImage)
+                }
+            }
+            res.status(400).json({msg:'Falta imagen'})
+            
+        } catch (error) {
+            res.status(400).json({error})
+        }
+    },
+
+    cargarArhivoCloud:async(req,res)=>{
+        const {id} = req.params;
+        try {
+            const {tempFilePath} = req.files.archivo;
+            //subir la imagen
+            const {secure_url}  = await cloudinary.uploader.upload(tempFilePath)
+            let persona = await Persona.findOne({_id:id})
+            if(persona.foto){
+                
+                const  nombreTemp = persona.foto.split('/');//dividirla url de la imagen por /
+                const nombreArchivo = nombreTemp[nombreTemp.length-1]//tomar la ultima posicion, ahí esta el name de la img
+                const [public_id] = nombreArchivo.split('.');//separar el name de la extension
+                //destruir img del servidor 
+                cloudinary.uploader.destroy(public_id)//eliminar la imagen por name que es unico por eso id
+            }
+            persona = await Persona.findByIdAndUpdate(id,{foto:secure_url})
+            res.json({secure_url})
+        } catch (error) {
+            res.status(400).json({error})
+        }
+    },
+
+    //traer imagen de cloudinary
+    traerImagenesCloud:async(req,res)=>{
+        const {id} = req.params;
+        try {
+            let persona = await Persona.findOne({_id:id});
+            if(persona.foto){
+                return res.json({url:persona.foto})
+
+            }
+            res.status(400).json({msg:'Falta imagen'})
+            
+        } catch (error) {
+            res.status(400).json({error})
+        }
+    },
 }
 export default personasControllers

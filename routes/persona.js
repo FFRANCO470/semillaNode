@@ -5,6 +5,7 @@ import { validarJWR } from '../middlewares/validarJwt.js';
 import { validarRol } from '../middlewares/validarRoles.js';
 import {check} from 'express-validator';
 import { existePersonaByEmail, existePersonaById, existePersonaByNombre, existePersonaByTipo } from '../helpers/persona.js';
+import  validarExistaArchivo  from '../middlewares/validar-exista-archivo.js';
 
 const router = Router();
 
@@ -73,5 +74,37 @@ router.put('/desactivar/:id',[
     validarCampo
 ],personasControllers.personaPutDesactivar)
 
+//subir foto al servidor
+router.post('/upload/:id',[
+    validarJWR,
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existePersonaById),
+    validarExistaArchivo,
+    validarCampo
+],personasControllers.cargarArhivo)
+
+router.get('/upload/:id',[
+    validarJWR,
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existePersonaById),
+    validarCampo
+],personasControllers.traerImagenes)
+
+//subir foto a servicio de terceros
+router.post('/uploadCloud/:id',[
+    validarJWR,
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existePersonaById),
+    validarExistaArchivo,
+    validarCampo
+],personasControllers.cargarArhivoCloud)
+
+//traer la foto de cloudinary
+router.get('/uploadCloud/:id',[
+    validarJWR,
+    check('id','ID no valido').isMongoId(),
+    check('id').custom(existePersonaById),
+    validarCampo
+],personasControllers.traerImagenesCloud)
 
 export default router

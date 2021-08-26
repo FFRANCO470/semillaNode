@@ -8,6 +8,7 @@ const PersonaSchema = mongoose.Schema({
     direccion:{type:String, default:"",maxlength:70},
     telefono:{type:String, default:"", maxlength:15},
     email:{type:String, required:true, uniqued:true, maxlength:50},
+    foto:{type:String},
     estado:{type:Number,default:1},//1 activo 0 desactivado
     createAt:{type:Date,default:Date.now}    
 })

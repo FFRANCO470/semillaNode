@@ -7,6 +7,7 @@ import articulo from '../routes/articulo.js'
 import persona from '../routes/persona.js'
 import compra from '../routes/compra.js'
 import venta from '../routes/venta.js'
+import fileUpload from 'express-fileupload'
 class Server{
     constructor(){
         //crear variable con el puerto
@@ -39,6 +40,15 @@ class Server{
         this.app.use(cors());  
         //para mostrar el front end
         this.app.use(express.static('public'))
+        //para subir fotos
+        this.app.use(fileUpload({
+            //crear archivo temporal para subir al servidor
+            useTempFiles:true,
+            //carpeta donde va a guardar el temporal
+            tempFileDir:'/tmp/',
+            //si no existe carpeta donde envia la foto, la crea
+            createParentPath:true 
+        }))
     }
     //mantener prendido el servidor
     listen(){
