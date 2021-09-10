@@ -9,6 +9,7 @@ import  validarExistaArchivo  from '../middlewares/validar-exista-archivo.js';
 
 const router = Router();
 
+//ruta para agregar una persona
 router.post('/',[
     validarJWR,
     validarRol(),
@@ -21,6 +22,7 @@ router.post('/',[
     validarCampo
 ],personasControllers.personaPost)
 
+//ruta para traer las personas
 //validarRol("ALMACENISTA_ROL","VENDEDOR_ROL")
 router.get('/',[
     validarJWR,
@@ -28,6 +30,7 @@ router.get('/',[
     validarCampo
 ],personasControllers.personaGet)
 
+//rutas para traer una persona por id
 router.get('/byid/:id',[
     validarJWR,
     validarRol('ALMACENISTA_ROL','VENDEDOR_ROL'),
@@ -36,18 +39,21 @@ router.get('/byid/:id',[
     validarCampo
 ],personasControllers.personaGetById)
 
+//ruta para traer todos los clientes
 router.get('/listClientes',[
     validarJWR,
     validarRol("VENDEDOR_ROL"),
     validarCampo
 ],personasControllers.personaGetListCliente)
 
+//ruta para traer todos los proveedores
 router.get('/listProveedores',[
     validarJWR,
     validarRol("ALMACENISTA_ROL"),
     validarCampo
 ],personasControllers.personaGetListProveedor)
 
+//ruta para actualizar una persona por id
 router.put('/:id',[
     validarJWR,
     validarRol(),
@@ -58,6 +64,7 @@ router.put('/:id',[
     validarCampo
 ],personasControllers.personaPut)
 
+//ruta para activar una persona por id
 router.put('/activar/:id',[
     validarJWR,
     validarRol(),
@@ -66,6 +73,7 @@ router.put('/activar/:id',[
     validarCampo
 ],personasControllers.personaPutActivar)
 
+//ruta para desactivar una ruta por id
 router.put('/desactivar/:id',[
     validarJWR,
     validarRol(),
@@ -74,7 +82,7 @@ router.put('/desactivar/:id',[
     validarCampo
 ],personasControllers.personaPutDesactivar)
 
-//subir foto al servidor
+//subir foto al servidor (nivel local)
 router.post('/upload/:id',[
     validarJWR,
     check('id','ID no valido').isMongoId(),
@@ -83,6 +91,7 @@ router.post('/upload/:id',[
     validarCampo
 ],personasControllers.cargarArhivo)
 
+//ruta para traer una foto del servidor (nivel local)
 router.get('/upload/:id',[
     validarJWR,
     check('id','ID no valido').isMongoId(),
@@ -90,7 +99,7 @@ router.get('/upload/:id',[
     validarCampo
 ],personasControllers.traerImagenes)
 
-//subir foto a servicio de terceros
+//ruta para subir foto a servicio de terceros
 router.post('/uploadCloud/:id',[
     validarJWR,
     check('id','ID no valido').isMongoId(),

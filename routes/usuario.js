@@ -8,6 +8,7 @@ import { existeUsuarioByEmail, existeUsuarioById, existeUsuarioByName, existeUsu
 
 const router = Router();
 
+//ruta para agregar un usuario
 router.post('/',[
     //verificar que los campos no esten vacios
     check('nombre','Nombre obligatorio').not().isEmpty(),
@@ -21,12 +22,14 @@ router.post('/',[
     validarCampo
 ],usuarioController.usuarioPost);
 
+//ruta para iniciar sesion
 router.post('/login',[
     check('email','Email obligatorio').not().isEmpty(),
     check('password','Clave obligatoria').not().isEmpty(),
     validarCampo
 ],usuarioController.login);
 
+//ruta para traer a todos los usuarios
 router.get('/',[
     //validar sesion
     validarJWR,
@@ -36,6 +39,7 @@ router.get('/',[
     validarCampo
 ],usuarioController.usuarioGet);
 
+//ruta para traer un usuario por id
 router.get('/:id',[
     validarJWR,
     validarRol(),
@@ -44,6 +48,7 @@ router.get('/:id',[
     validarCampo
 ],usuarioController.usuarioGetId);
 
+//ruta para actualizar un usuario por id
 router.put('/:id',[
     validarJWR,
     validarRol(),
@@ -54,6 +59,7 @@ router.put('/:id',[
     validarCampo
 ],usuarioController.usuarioPut);
 
+//ruta para activar un usuario
 router.put('/activar/:id',[
     validarJWR,
     validarRol(),
@@ -61,6 +67,8 @@ router.put('/activar/:id',[
     check('id').custom(existeUsuarioById),
     validarCampo
 ],usuarioController.usuarioPutActivar);
+
+//ruta desactivar un usuario
 router.put('/desactivar/:id',[
     validarJWR,
     validarRol(),

@@ -13,6 +13,7 @@ cloudinary.config(process.env.CLOUDINARY_URL)
 //tipoPersona(obliga), nombre(obliga)(unico) 50, email(unico obliga) 50, tipoDocumento 20, numDocumento 20, direccion 70, telefono 15, 
 const personasControllers = {
 
+    //agregar personas a la bd
     personaPost: async (req,res)=>{
         const {tipoPersona,nombre,tipoDocumento,numDocumento,direccion,telefono,email} = req.body;
         if(nombre.length>50){return res.status(400).json({msg:'Nombre mayor 50 caracteres'})}
@@ -33,6 +34,8 @@ const personasControllers = {
         await persona.save();
         res.json({persona})
     },
+
+    //traer personas de la bd
     personaGet: async (req,res)=>{
         const value = req.query.value;
         const persona = await Persona.find({
@@ -48,11 +51,15 @@ const personasControllers = {
         })
         res.json({persona})
     },
+
+    //traer persona por id de la bd
     personaGetById : async (req,res)=>{
         const {id}=req.params;
         const persona = await Persona.findOne({_id:id})
         res.json({persona})
     },
+
+    //traer todos los cliente de la bd
     personaGetListCliente : async (req,res)=>{
         const value = req.query.value;
         const persona = await Persona
@@ -72,6 +79,8 @@ const personasControllers = {
             )
         res.json({persona})
     },
+
+    //traer todos los proveedores de la bd
     personaGetListProveedor : async (req,res)=>{
         const value = req.query.value;
         const persona = await Persona
@@ -91,6 +100,8 @@ const personasControllers = {
             )
         res.json({persona})
     },
+
+    //actualizar los campos de un persona por id en la bd
     personaPut: async (req,res) =>{
         const {id} = req.params;
         const{_id,createdAt,estado,__v,tipoPersona, nombre, email, tipoDocumento,numDocumento,direccion,telefono} = req.body;//nombre   
@@ -138,17 +149,23 @@ const personasControllers = {
         const articulo = await Persona.findByIdAndUpdate(id,resto)
         res.json({articulo})
     },
+
+    //activar una persona
     personaPutActivar: async (req,res) => {
         const {id} = req.params;
         const persona = await Persona.findByIdAndUpdate(id,{estado:1});
         res.json({persona})
     },
+
+    //desactivar una persona
     personaPutDesactivar : async (req,res) =>{
         const {id} = req.params;
         const persona = await Persona.findByIdAndUpdate(id,{estado:0});
         res.json({persona})
     },
-    //cargar imagen
+
+
+    //agregar una imagen a una persona la imagen se almacena a nivel loca
     cargarArhivo : async(req,res)=>{
         const {id}=req.params;
         //como la imagen esta propensa a errores como el formato u otra cosa se coloca en try
@@ -170,6 +187,7 @@ const personasControllers = {
                     fs.unlinkSync(pathImage)
                 }
             }
+            //guardar en la bd
             persona = await Persona.findByIdAndUpdate(id,{foto:nombre})
             //responder
             res.json({nombre})
@@ -178,6 +196,7 @@ const personasControllers = {
         }
     },
 
+    //traer la imagen de la persona, la imagen esta en nivel local
     traerImagenes:async(req,res)=>{
         const {id} = req.params;
         try {
@@ -200,6 +219,7 @@ const personasControllers = {
         }
     },
 
+    //colocar una foto a una pesona, la foto se almacena en la nuve en cloudinary
     cargarArhivoCloud:async(req,res)=>{
         const {id} = req.params;
         console.log(req);
@@ -223,7 +243,7 @@ const personasControllers = {
         }
     },
 
-    //traer imagen de cloudinary
+    //traer imagen de cloudinary de una persona por id
     traerImagenesCloud:async(req,res)=>{
         const {id} = req.params;
         try {
