@@ -202,6 +202,7 @@ const personasControllers = {
 
     cargarArhivoCloud:async(req,res)=>{
         const {id} = req.params;
+        console.log(req);
         try {
             const {tempFilePath} = req.files.archivo;
             //subir la imagen
