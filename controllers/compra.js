@@ -2,6 +2,8 @@ import Compra from '../models/compra.js'
 import { aumentarStock , disminuirStock} from '../helpers/compra.js';
 //usuario, persona, tipoComprobante, serieComprobante(7), numComprobante(10), impuesto, total, detalles
 const compraControllers = {
+
+    // agregar compra
     compraPost : async (req,res) => {
         const {usuario, persona, tipoComprobante, serieComprobante, numComprobante, impuesto, total, detalles} = req.body;
         if (serieComprobante.length > 7) {return res.status(400).json({msg:'serieComprobante mayor a 7 caracteres'})}
@@ -22,6 +24,8 @@ const compraControllers = {
         await compra.save();
         res.json({compra})
     },
+
+    // traer compras
     compraGet:async ( req,res)=>{
         const value = req.query.value;
         const compra = await Compra
@@ -37,11 +41,15 @@ const compraControllers = {
             .populate('persona','nombre');
         res.json({compra})
     },
+
+    // traer compro por id
     compraGetById : async (req,res)=>{  
         const {id}=req.params;
         const compra = await Compra.findOne({_id:id}).populate('usuario','nombre').populate('persona','nombre');
         res.json({compra})
     },
+
+    // activar compra
     compraPutActivar : async ( req,res) =>{
         const {id} = req.params;
         const compraActiva = await Compra.findOne({_id:id})
@@ -53,6 +61,8 @@ const compraControllers = {
         res.json({compra})
           
     },
+
+    // desacrivar compra
     compraPutDesactivar : async ( req , res )=>{
         const {id} = req.params;
         const compraDesactiva = await Compra.findOne({_id:id})

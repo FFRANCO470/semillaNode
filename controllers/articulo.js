@@ -3,6 +3,8 @@ import mongodb from 'mongodb'
 import Categoria from '../models/categoria.js';
 import { rectificandoNombre,rectificandoCodigo } from '../helpers/articulo.js';
 const articulosControllers={
+
+    // agregar articulo
     articuloPost : async (req,res)=>{
         const {categoria,codigo,nombre,descripcion,precio,costo,stock} = req.body
         
@@ -44,6 +46,8 @@ const articulosControllers={
         await articulo.save()
         res.json({articulo})
     },
+
+    // traer lista de articulos
     articuloGet : async (req,res)=>{
         const value = req.query.value;
         const articulos = await Articulo
@@ -56,16 +60,22 @@ const articulosControllers={
             .populate('categoria','nombre')//traer datos de otro modelo
         res.json({articulos})
     },
+
+    // traer articulo por id
     articuloGetById : async (req,res) => {
         const {id}=req.params;
         const articulo = await Articulo.findOne({_id:id}).populate('categoria','nombre')
         res.json({articulo})
     },
+
+    // traer articulo por categoria
     articulosGetCategoria : async (req,res)=>{
         const {id}=req.params;
         const articulos = await Articulo.find({categoria:id})   //.findOne({_id:id})
         res.json({articulos})
     },
+
+    // actualizar articulo
     articuloPut : async (req,res)=>{//categoria,codigo,nombre,descripcion,precio,costo,stock
         const {id} = req.params
         const {_id,estado,createAt,__v,...resto} = req.body
@@ -130,11 +140,15 @@ const articulosControllers={
         const articulo = await Articulo.findByIdAndUpdate(id,resto)//categoria, codigo, nombre, descripcion, precio, costo, stock
         res.json({articulo})
     },
+
+    // activar articulo
     articuloPutActivar : async (req,res)=>{
         const {id} = req.params
         const articulo = await Articulo.findByIdAndUpdate(id,{estado:1});
         res.json({articulo})
     },
+
+    // desactivar articulo
     articuloPutDesactivar : async (req,res)=>{
         const {id} = req.params
         const articulo = await Articulo.findByIdAndUpdate(id,{estado:0});

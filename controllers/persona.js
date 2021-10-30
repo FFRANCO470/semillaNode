@@ -172,8 +172,10 @@ const personasControllers = {
         try {
             //subir la foto envia archivo y recibe nombre archivo
             const nombre = await subirArchivo(req.files,undefined)
+
             //persona a la que pertenece la foto
             let persona = await Persona.findOne({_id:id})
+
             //saber si tiene foto la persona
             if(persona.foto){
                 //para saber donde esta la foto y borrarla
@@ -227,9 +229,10 @@ const personasControllers = {
             const {tempFilePath} = req.files.archivo;
             //subir la imagen
             const {secure_url}  = await cloudinary.uploader.upload(tempFilePath)
+
             let persona = await Persona.findOne({_id:id})
+            
             if(persona.foto){
-                
                 const  nombreTemp = persona.foto.split('/');//dividirla url de la imagen por /
                 const nombreArchivo = nombreTemp[nombreTemp.length-1]//tomar la ultima posicion, ahí esta el name de la img
                 const [public_id] = nombreArchivo.split('.');//separar el name de la extension
